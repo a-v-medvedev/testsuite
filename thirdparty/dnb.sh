@@ -60,7 +60,7 @@ function dnb_sandbox() {
     cd sandbox
     template_to_psubmitopts .
     for i in always never rand1 rand2 rand5 rand10 rand50 rand90 rand95 rand99; do 
-        ln -s psubmit.opt psubmit_${i}.opt
+        [ -e psubmit_${i}.opt ] || ln -s psubmit.opt psubmit_${i}.opt
     done
     cd ..
     echo ">> Sandbox ready"
