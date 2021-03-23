@@ -26,6 +26,8 @@ export PSUBMIT_OPTS_INIT_COMMANDS=
 export PSUBMIT_OPTS_MPI_SCRIPT=ompi3
 export PSUBMIT_OPTS_BATCH_SCRIPT=direct
 
+export PSUBMIT_OPTS_CPER10USEC=33
+
 EOM
     . $script
     cat $script
