@@ -66,8 +66,8 @@ function dnb_mpi-benchmarks() {
         ln -s "$INSTALL_DIR"/argsparser.bin .
         ln -s "$INSTALL_DIR"/yaml-cpp.bin .
         mkdir -p lib
-        #cp "$INSTALL_DIR"/argsparser.bin/*.so "$INSTALL_DIR"/yaml-cpp.bin/lib/*.so lib/
-        cp "$INSTALL_DIR"/argsparser.bin/*.a "$INSTALL_DIR"/yaml-cpp.bin/lib/*.a lib/
+        cp "$INSTALL_DIR"/argsparser.bin/*.so "$INSTALL_DIR"/yaml-cpp.bin/lib/*.so lib/
+        #cp "$INSTALL_DIR"/argsparser.bin/*.a "$INSTALL_DIR"/yaml-cpp.bin/lib/*.a lib/
         cd "$INSTALL_DIR"/"$pkg"-"$V".src/src_cpp
         export CXXFLAGS="-IASYNC/thirdparty/argsparser.bin -IASYNC/thirdparty/yaml-cpp.bin/include "
         make TARGET=ASYNC CXX=$MPICXX clean
@@ -83,7 +83,7 @@ function dnb_mpi-benchmarks() {
 QUEUE=__QUEUE__
 QUEUE_SUFFIX=__QUEUE_SUFFIX__
 NODETYPE=__NODETYPE__
-TIME_LIMIT=3
+TIME_LIMIT=1000
 TARGET_BIN=./IMB-ASYNC
 INIT_COMMANDS=__INIT_COMMANDS__
 INJOB_INIT_COMMANDS='__INJOB_INIT_COMMANDS__'
@@ -110,6 +110,8 @@ function dnb_sandbox() {
     for i in always never rand1 rand2 rand5 rand10 rand50 rand90 rand95 rand99; do 
         [ -e psubmit_${i}.opt ] || ln -s psubmit.opt psubmit_${i}.opt
     done
+    ln -s .. thirdparty
+    ln -s ../../env.sh env.sh
     cd ..
     echo ">> Sandbox ready"
     return 0
@@ -121,7 +123,7 @@ function dnb_sandbox() {
 #CXX=g++
 #MPICXX=g++
 
-PACKAGES="yaml-cpp argsparser massivetests psubmit teststub"
+PACKAGES="yaml-cpp argsparser massivetests psubmit teststub mpi-benchmarks"
 VERSIONS="yaml-cpp:0.6.3 argsparser:HEAD massivetests:HEAD^teststub_adding psubmit:HEAD teststub:HEAD mpi-benchmarks:HEAD"
 TARGET_DIRS=""
 
