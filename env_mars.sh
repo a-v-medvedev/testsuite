@@ -5,15 +5,6 @@ function env_init_global {
     script=$(mktemp .XXXXXX.sh)
 cat > $script << 'EOM'
 
-#export MPICC=...
-#export MPICXX=...
-#export CC=...
-#export CXX=...
-
-#export CUDA_CC=35
-#export CUDA_ARCH="-arch=sm_${CUDA_CC}"
-#export CUDA_GENCODE="arch=compute_${CUDA_CC},code=sm_${CUDA_CC}"
-
 export MAKE_PARALLEL_LEVEL=4
 
 export PSUBMIT_OPTS_NNODES=1
@@ -27,6 +18,13 @@ export PSUBMIT_OPTS_MPI_SCRIPT=generic
 export PSUBMIT_OPTS_BATCH_SCRIPT=direct
 
 export PSUBMIT_OPTS_CPER10USEC=33
+
+export TESTSUITE_MODULE=teststub
+export TESTSUITE_CONF=mars
+
+export DNB_NOCUDA=1
+export DNB_NOCCOMP=1
+
 
 EOM
     . $script

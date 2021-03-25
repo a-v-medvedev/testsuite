@@ -1,11 +1,6 @@
 #!/bin/bash
 
-MODULE=teststub
-CONF=mars
-
 set -eu
-
-[ -f ../env.sh ] && source ../env.sh || echo "WARNING: no environment file ../env.sh!"
 
 BSCRIPTSDIR=./dbscripts
 
@@ -15,6 +10,8 @@ source $BSCRIPTSDIR/compchk.inc
 source $BSCRIPTSDIR/envchk.inc
 source $BSCRIPTSDIR/db.inc
 source $BSCRIPTSDIR/apps.inc
+
+[ -f ../env.sh ] && source ../env.sh || fatal "No ../env.sh file!"
 
 function dnb_massivetests() {
     local pkg="massivetests"
@@ -28,10 +25,10 @@ function dnb_massivetests() {
     fi
     local COMMANDS=""
     local PARAMS="THIRDPARTY=.."
-    PARAMS="$PARAMS MODULE=$MODULE"
+    PARAMS="$PARAMS MODULE=$TESTSUITE_MODULE"
     b_make "$pkg" "$V" "$COMMANDS" "clean" "$m"
     b_make "$pkg" "$V" "$COMMANDS" "$PARAMS" "$m"
-    local FILES="massivetest scripts/competing/clean.sh scripts/competing/compare.sh scripts/competing/competing_massive_tests.sh scripts/competing/make_table.sh scripts/massive_tests.inc scripts/competing/script-postproc.sh confs/${MODULE}_${CONF}/modeset.inc confs/${MODULE}_${CONF}/params.inc"
+    local FILES="massivetest scripts/competing/clean.sh scripts/competing/compare.sh scripts/competing/competing_massive_tests.sh scripts/competing/make_table.sh scripts/massive_tests.inc scripts/competing/script-postproc.sh confs/${TESTSUITE_MODULE}_${TESTSUITE_CONF}/modeset.inc confs/${TESTSUITE_MODULE}_${TESTSUITE_CONF}/params.inc"
     this_mode_is_set "i" "$m" && i_direct_copy "$pkg" "$V" "$FILES" "$m"
     i_make_binary_symlink "$pkg" "${V}" "$m"
     return 0
@@ -122,8 +119,8 @@ function dnb_sandbox() {
     mkdir -p sandbox
     [ -e sandbox/psubmit.bin ] || ln -s ../psubmit.bin sandbox/
     cp -vr massivetests.bin/* sandbox/
-	cp -vr ${MODULE}.bin/* sandbox/
-    cp -vr ../${MODULE}.conf/* sandbox/
+	cp -vr ${TESTSUITE_MODULE}.bin/* sandbox/
+    cp -vr ../${TESTSUITE_MODULE}.conf/* sandbox/
     cd sandbox
     for i in always never rand1 rand2 rand5 rand10 rand50 rand90 rand95 rand99; do 
         [ -e psubmit_${i}.opt ] || ln -s psubmit.opt psubmit_${i}.opt
@@ -148,6 +145,8 @@ TARGET_DIRS=""
 started=$(date "+%s")
 echo "Download and build started at timestamp: $started."
 environment_check_main || fatal "Environment is not supported, exiting"
+[ -z "$TESTSUITE_MODULE" ] && fatal "TESTSUITE_MODULE must be defined."
+[ -z "$TESTSUITE_CONF" ] && fatal "TESTSUITE_CONF must be defined."
 cd "$INSTALL_DIR"
 dubi_main "$*"
 finished=$(date "+%s")
