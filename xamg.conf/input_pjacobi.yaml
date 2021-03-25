@@ -1,0 +1,7 @@
+---
+matrix: generate
+solver_params:
+  method: PBiCGStab
+  max_iters: 100
+preconditioner_params:
+  method: Jacobi

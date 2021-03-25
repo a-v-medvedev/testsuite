@@ -1,0 +1,8 @@
+---
+pjacobi/@10x10x10:
+    options:
+        skip: false
+        timeout: 5
+    values:
+        solver/iters: 8
+...
