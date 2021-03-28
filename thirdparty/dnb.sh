@@ -119,14 +119,27 @@ function dnb_XAMG() {
     environment_check_specific "$pkg" || fatal "$pkg: environment check failed"
     local m=$(get_field "$1" 2 "=")
     local V=$(get_field "$2" 2 "=")
-    du_gitlab "xamg" "XAMG" "v" "$V" "$m"
+    if any_mode_is_set "du" "$m"; then
+        [ -e "$pkg"-"$V".src ] && rm -rf "$pkg"-"$V".src
+        mkdir -p "$pkg"-"$V".src
+        cd "$pkg"-"$V".src
+		local branch="$V"
+		local XVER=$(get_field "${V}" "1" "^")
+        if [ "${XVER}" == "HEAD" ]; then
+            local branch=master
+            [ $(get_nfields "$V" "^") == "2" ] && branch=$(get_field "${VER}" "2" "^")
+        fi
+        git clone --depth 1 --single-branch --branch "$branch" --recursive https://gitlab.com/xamg/xamg.git .
+        cd ..
+    fi
 	if this_mode_is_set "b" "$m"; then
         cd "$pkg"-"$V".src
-        cp -r ../dbscripts/* tools/dbscripts
         local old_install_dir=$INSTALL_DIR
 		cd ThirdParty
         INSTALL_DIR=$PWD
         ./dnb.sh
+        rm argsparser.bin
+        ln -s ../../argsparser.bin argsparser.bin
 		INSTALL_DIR="$old_install_dir"
         cd $INSTALL_DIR
 	fi
@@ -138,6 +151,9 @@ function dnb_XAMG() {
     local FILES="examples/test/xamg_test ThirdParty/hypre.bin/lib/*.so ThirdParty/scotch.bin/lib/*.so ThirdParty/argsparser.bin/*.so ThirdParty/yaml-cpp.bin/lib/*.so.*"
     i_direct_copy "$pkg" "$V" "$FILES" "$m"
     i_make_binary_symlink "$pkg" "${V}" "$m"
+    if this_mode_is_set "i" "$m"; then
+        [ -e xamg.bin ] || ln -s XAMG.bin xamg.bin
+    fi
 }
 
 
@@ -145,12 +161,16 @@ function dnb_sandbox() {
     echo ">> Making sandbox:"
     mkdir -p sandbox
     [ -e sandbox/psubmit.bin ] || ln -s ../psubmit.bin sandbox/
-    cp -vr massivetests.bin/* sandbox/
-	cp -vr ${TESTSUITE_PROJECT}.bin/* sandbox/
-    cp -vr ../${TESTSUITE_PROJECT}.conf/* sandbox/
+    cp -va massivetests.bin/* sandbox/
+	cp -va ${TESTSUITE_PROJECT}.bin/* sandbox/
+    cp -va ../${TESTSUITE_PROJECT}.conf/* sandbox/
     cd sandbox
     for i in always never rand1 rand2 rand5 rand10 rand50 rand90 rand95 rand99; do 
         [ -e psubmit_${i}.opt ] || ln -s psubmit.opt psubmit_${i}.opt
+    done
+    for i in psubmit_*.opt.TEMPLATE; do
+        local sfx=$(echo $i | sed 's/psubmit_//;s/.opt.TEMPLATE//')
+        template_to_psubmitopts . "$sfx"
     done
     [ -e thirdparty ] || ln -s .. thirdparty
     [ -e env.sh ] || ln -s ../../env.sh env.sh
