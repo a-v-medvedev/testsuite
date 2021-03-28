@@ -20,8 +20,8 @@ export PSUBMIT_OPTS_BATCH_SCRIPT=direct
 export PSUBMIT_OPTS_CPER10USEC=33
 
 export TESTSUITE_MODULE=functest
-export TESTSUITE_PROJECT=teststub
-export TESTSUITE_CONF=teststub_mars
+export TESTSUITE_PROJECT=xamg
+export TESTSUITE_CONF=xamg_mars
 
 export DNB_NOCUDA=1
 export DNB_NOCCOMP=1

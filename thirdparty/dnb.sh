@@ -26,7 +26,7 @@ function dnb_massivetests() {
     local COMMANDS=""
     local PARAMS="THIRDPARTY=.."
     PARAMS="$PARAMS MODULE=$TESTSUITE_MODULE"
-    b_make "$pkg" "$V" "$COMMANDS" "clean" "$m"
+    b_make "$pkg" "$V" "$COMMANDS" "$PARAMS clean" "$m"
     b_make "$pkg" "$V" "$COMMANDS" "$PARAMS" "$m"
     local FILES="massivetest scripts/competing/clean.sh scripts/competing/compare.sh scripts/competing/competing_massive_tests.sh scripts/competing/make_table.sh scripts/massive_tests.inc scripts/competing/script-postproc.sh confs/${TESTSUITE_CONF}/modeset.inc confs/${TESTSUITE_CONF}/params.inc"
     this_mode_is_set "i" "$m" && i_direct_copy "$pkg" "$V" "$FILES" "$m"
@@ -114,6 +114,33 @@ fi
 }
 
 
+function dnb_XAMG() {
+    local pkg="XAMG"
+    environment_check_specific "$pkg" || fatal "$pkg: environment check failed"
+    local m=$(get_field "$1" 2 "=")
+    local V=$(get_field "$2" 2 "=")
+    du_gitlab "xamg" "XAMG" "v" "$V" "$m"
+	if this_mode_is_set "b" "$m"; then
+        cd "$pkg"-"$V".src
+        cp -r ../dbscripts/* tools/dbscripts
+        local old_install_dir=$INSTALL_DIR
+		cd ThirdParty
+        INSTALL_DIR=$PWD
+        ./dnb.sh
+		INSTALL_DIR="$old_install_dir"
+        cd $INSTALL_DIR
+	fi
+    local COMMANDS="cd examples/test"
+    local PARAMS="BUILD=Release CONFIG=generic"
+    b_make "$pkg" "$V" "$COMMANDS" "$PARAMS clean" "$m"
+    cd $INSTALL_DIR
+    b_make "$pkg" "$V" "$COMMANDS" "$PARAMS" "$m"
+    local FILES="examples/test/xamg_test ThirdParty/hypre.bin/lib/*.so ThirdParty/scotch.bin/lib/*.so ThirdParty/argsparser.bin/*.so ThirdParty/yaml-cpp.bin/lib/*.so.*"
+    i_direct_copy "$pkg" "$V" "$FILES" "$m"
+    i_make_binary_symlink "$pkg" "${V}" "$m"
+}
+
+
 function dnb_sandbox() {
     echo ">> Making sandbox:"
     mkdir -p sandbox
@@ -133,8 +160,8 @@ function dnb_sandbox() {
 }
 
 
-PACKAGES="yaml-cpp argsparser massivetests psubmit teststub mpi-benchmarks"
-VERSIONS="yaml-cpp:0.6.3 argsparser:HEAD massivetests:HEAD^teststub_adding psubmit:HEAD teststub:HEAD mpi-benchmarks:HEAD"
+PACKAGES="yaml-cpp argsparser massivetests psubmit teststub mpi-benchmarks XAMG"
+VERSIONS="yaml-cpp:0.6.3 argsparser:HEAD massivetests:HEAD^teststub_adding psubmit:HEAD teststub:HEAD mpi-benchmarks:HEAD XAMG:HEAD"
 TARGET_DIRS=""
 
 started=$(date "+%s")
