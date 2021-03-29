@@ -116,22 +116,11 @@ fi
 
 function dnb_XAMG() {
     local pkg="XAMG"
+    local conf="generic"
     environment_check_specific "$pkg" || fatal "$pkg: environment check failed"
     local m=$(get_field "$1" 2 "=")
     local V=$(get_field "$2" 2 "=")
-    if any_mode_is_set "du" "$m"; then
-        [ -e "$pkg"-"$V".src ] && rm -rf "$pkg"-"$V".src
-        mkdir -p "$pkg"-"$V".src
-        cd "$pkg"-"$V".src
-		local branch="$V"
-		local XVER=$(get_field "${V}" "1" "^")
-        if [ "${XVER}" == "HEAD" ]; then
-            local branch=master
-            [ $(get_nfields "$V" "^") == "2" ] && branch=$(get_field "${VER}" "2" "^")
-        fi
-        git clone --depth 1 --single-branch --branch "$branch" --recursive https://gitlab.com/xamg/xamg.git .
-        cd ..
-    fi
+    du_gitclone_recursive "$pkg" "https://gitlab.com/xamg/xamg.git" "$V" "$m"
 	if this_mode_is_set "b" "$m"; then
         cd "$pkg"-"$V".src
         local old_install_dir=$INSTALL_DIR
@@ -144,11 +133,13 @@ function dnb_XAMG() {
         cd $INSTALL_DIR
 	fi
     local COMMANDS="cd examples/test"
-    local PARAMS="BUILD=Release CONFIG=generic"
-    b_make "$pkg" "$V" "$COMMANDS" "$PARAMS clean" "$m"
-    cd $INSTALL_DIR
-    b_make "$pkg" "$V" "$COMMANDS" "$PARAMS" "$m"
-    local FILES="examples/test/xamg_test ThirdParty/hypre.bin/lib/*.so ThirdParty/scotch.bin/lib/*.so ThirdParty/argsparser.bin/*.so ThirdParty/yaml-cpp.bin/lib/*.so.*"
+    for i in 1 2 4 8; do
+        local PARAMS="BUILD=Release CONFIG=${conf} XAMG_USER_FLAGS=\"-DXAMG_NV=${i}\""
+        b_make "$pkg" "$V" "$COMMANDS" "$PARAMS clean" "$m"
+        b_make "$pkg" "$V" "$COMMANDS" "$PARAMS" "$m"
+        mv examples/test/xamg_test examples/test/xamg_test_nv${i}
+    done
+    local FILES="examples/test/xamg_test_nv* ThirdParty/hypre.bin/lib/*.so ThirdParty/scotch.bin/lib/*.so ThirdParty/argsparser.bin/*.so ThirdParty/yaml-cpp.bin/lib/*.so.*"
     i_direct_copy "$pkg" "$V" "$FILES" "$m"
     i_make_binary_symlink "$pkg" "${V}" "$m"
     if this_mode_is_set "i" "$m"; then
