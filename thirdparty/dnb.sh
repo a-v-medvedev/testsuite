@@ -60,7 +60,7 @@ INJOB_INIT_COMMANDS='__INJOB_INIT_COMMANDS__'
 MPIEXEC=__MPI_SCRIPT__
 BATCH=__BATCH_SCRIPT__
 EOM
-        template_to_psubmitopts .
+        template_to_psubmitopts . ""
         cd "$INSTALL_DIR"
     fi
 	return 0
@@ -106,7 +106,7 @@ INJOB_INIT_COMMANDS='__INJOB_INIT_COMMANDS__'
 MPIEXEC=__MPI_SCRIPT__
 BATCH=__BATCH_SCRIPT__
 EOM
-        template_to_psubmitopts .
+        template_to_psubmitopts . ""
         cd "$INSTALL_DIR"
         [ -e "imb_async.bin" ] || ln -s "$pkg".bin imb_async.bin
 fi
@@ -126,7 +126,7 @@ function dnb_XAMG() {
         local old_install_dir=$INSTALL_DIR
 		cd ThirdParty
         INSTALL_DIR=$PWD
-        ./dnb.sh
+        ./dnb.sh 
         rm argsparser.bin
         ln -s ../../argsparser.bin argsparser.bin
 		INSTALL_DIR="$old_install_dir"
@@ -137,7 +137,7 @@ function dnb_XAMG() {
         local PARAMS="BUILD=Release CONFIG=${conf} XAMG_USER_FLAGS=\"-DXAMG_NV=${i}\""
         b_make "$pkg" "$V" "$COMMANDS" "$PARAMS clean" "$m"
         b_make "$pkg" "$V" "$COMMANDS" "$PARAMS" "$m"
-        mv examples/test/xamg_test examples/test/xamg_test_nv${i}
+        mv "$pkg"-"$V".src/examples/test/xamg_test "$pkg"-"$V".src/examples/test/xamg_test_nv${i}
     done
     local FILES="examples/test/xamg_test_nv* ThirdParty/hypre.bin/lib/*.so ThirdParty/scotch.bin/lib/*.so ThirdParty/argsparser.bin/*.so ThirdParty/yaml-cpp.bin/lib/*.so.*"
     i_direct_copy "$pkg" "$V" "$FILES" "$m"
