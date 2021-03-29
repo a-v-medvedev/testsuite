@@ -4,7 +4,7 @@ pjacobi/NV1/@10x10x10:
         skip: false
         timeout: 5
     values:
-        solver/iters: 9
+        solver/iters: 8
 
 pjacobi/NV2/@10x10x10:
     options:

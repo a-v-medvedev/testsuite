@@ -156,7 +156,8 @@ function dnb_sandbox() {
 	cp -va ${TESTSUITE_PROJECT}.bin/* sandbox/
     cp -va ../${TESTSUITE_PROJECT}.conf/* sandbox/
     cd sandbox
-    for i in always never rand1 rand2 rand5 rand10 rand50 rand90 rand95 rand99; do 
+    for i in always never rand1 rand2 rand5 rand10 rand50 rand90 rand95 rand99; do
+        rm -f psubmit_${i}.opt
         [ -e psubmit_${i}.opt ] || ln -s psubmit.opt psubmit_${i}.opt
     done
     for i in psubmit_*.opt.TEMPLATE; do
