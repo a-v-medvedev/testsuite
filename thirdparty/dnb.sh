@@ -120,7 +120,7 @@ function dnb_XAMG() {
     environment_check_specific "$pkg" || fatal "$pkg: environment check failed"
     local m=$(get_field "$1" 2 "=")
     local V=$(get_field "$2" 2 "=")
-    du_gitclone_recursive "$pkg" "https://gitlab.com/xamg/xamg.git" "$V" "$m"
+    du_gitclone_recursive "$pkg" "https://gitlab.com/krasnopolsky_msu/XAMG.git" "$V" "$m"
 	if this_mode_is_set "b" "$m"; then
         cd "$pkg"-"$V".src
         local old_install_dir=$INSTALL_DIR

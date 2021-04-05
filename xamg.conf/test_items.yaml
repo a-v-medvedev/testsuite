@@ -5,6 +5,8 @@ pjacobi/NV1/@10x10x10:
         timeout: 5
     values:
         solver/iters: 8
+        solver/abs_residual[0]: 3.5856556292607119e-09
+        solver/residual[0]: 3.585658410250974e-09
 
 pjacobi/NV2/@10x10x10:
     options:
@@ -12,6 +14,8 @@ pjacobi/NV2/@10x10x10:
         timeout: 5
     values:
         solver/iters: 9
+        solver/abs_residual[1]: 6.1532217270132937e-06
+        solver/residual[1]: 6.1532217724742813e-06
 
 pjacobi/NV4/@10x10x10:
     options:
@@ -19,6 +23,8 @@ pjacobi/NV4/@10x10x10:
         timeout: 5
     values:
         solver/iters: 9
+        solver/abs_residual[3]: 1.7934011821713653e-05
+        solver/residual[3]: 1.7934012120067528e-05
 
 pjacobi/NV8/@10x10x10:
     options:
@@ -26,4 +32,6 @@ pjacobi/NV8/@10x10x10:
         timeout: 5
     values:
         solver/iters: 9
+        solver/abs_residual[7]: 4.1499581829315721e-05
+        solver/residual[7]: 4.1499580495909815e-05
 ...
