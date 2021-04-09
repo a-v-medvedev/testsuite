@@ -23,6 +23,8 @@ export TESTSUITE_MODULE=functest
 export TESTSUITE_PROJECT=xamg
 export TESTSUITE_CONF=xamg_mars
 
+export XAMG_IGNORE_AFFINITY=1
+
 export DNB_NOCUDA=1
 export DNB_NOCCOMP=1
 

@@ -1,37 +1,50 @@
 ---
 pjacobi/NV1/@10x10x10:
-    options:
-        skip: false
-        timeout: 5
     values:
         solver/iters: 8
-        solver/abs_residual[0]: 3.5856556292607119e-09
-        solver/residual[0]: 3.585658410250974e-09
+        solver/abs_residual[0]: 9.8540952543331038e-08
+        solver/residual[0]: 9.8540945075104156e-08
 
 pjacobi/NV2/@10x10x10:
-    options:
-        skip: false
-        timeout: 5
     values:
         solver/iters: 9
         solver/abs_residual[1]: 2.1666516679216291e-06
         solver/residual[1]: 2.1666516065524073e-06
 
 pjacobi/NV4/@10x10x10:
-    options:
-        skip: false
-        timeout: 5
     values:
         solver/iters: 9
         solver/abs_residual[3]: 6.4041964181051523e-06
         solver/residual[3]: 6.4041967445296485e-06
 
 pjacobi/NV8/@10x10x10:
-    options:
-        skip: false
-        timeout: 5
     values:
         solver/iters: 9
         solver/abs_residual[7]: 1.4880745258059668e-05
         solver/residual[7]: 1.4880745920046225e-05
+
+pjacobi/NV1/@5x5x5:
+    values:
+        solver/iters: 4
+        solver/abs_residual[0]: 3.0672555975818523e-08
+        solver/residual[0]: 3.0672550085347518e-08
+
+pjacobi/NV2/@5x5x5:
+    values:
+        solver/iters: 5
+        solver/abs_residual[1]: 3.0897617265558054e-08
+        solver/residual[1]: 3.0897657201287999e-08
+
+pjacobi/NV4/@5x5x5:
+    values:
+        solver/iters: 5
+        solver/abs_residual[3]: 1.2709412109714941e-07
+        solver/residual[3]: 1.2709409496252918e-07
+
+pjacobi/NV8/@5x5x5:
+    values:
+        solver/iters: 5
+        solver/abs_residual[7]: 3.2171750803430098e-07
+        solver/residual[7]: 3.2171806370887786e-07
+       
 ...

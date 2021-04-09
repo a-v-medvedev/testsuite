@@ -24,6 +24,7 @@ function dnb_massivetests() {
         [ -f "$INSTALL_DIR/argsparser.bin/argsparser.h" ] || fatal "$pkg: installed argsparser is required to build"
     fi
     local COMMANDS=""
+    #local PARAMS="THIRDPARTY=.. CXXFLAGS=-DDEBUG=1"
     local PARAMS="THIRDPARTY=.."
     PARAMS="$PARAMS MODULE=$TESTSUITE_MODULE"
     b_make "$pkg" "$V" "$COMMANDS" "$PARAMS clean" "$m"
@@ -120,7 +121,7 @@ function dnb_XAMG() {
     environment_check_specific "$pkg" || fatal "$pkg: environment check failed"
     local m=$(get_field "$1" 2 "=")
     local V=$(get_field "$2" 2 "=")
-    du_gitclone_recursive "$pkg" "https://gitlab.com/krasnopolsky_msu/XAMG.git" "$V" "$m"
+    du_gitclone_recursive "$pkg" "https://$DNB_GITLAB_USERNAME:$DNB_GITLAB_ACCESS_TOKEN@gitlab.com/krasnopolsky_msu/XAMG.git" "$V" "$m"
 	if this_mode_is_set "b" "$m"; then
         cd "$pkg"-"$V".src
         local old_install_dir=$INSTALL_DIR
