@@ -29,6 +29,7 @@ function dnb_sandbox() {
     cp -va massivetests.bin/* sandbox/
 	cp -va ${TESTSUITE_PROJECT}.bin/* sandbox/
     cp -va ../${TESTSUITE_PROJECT}.conf/* sandbox/
+    cp -va daemonize.bin/sbin/daemonize sandbox/psubmit.bin
     cd sandbox
     for i in psubmit_*.opt.TEMPLATE; do
         local sfx=$(echo $i | sed 's/psubmit_//;s/.opt.TEMPLATE//')
@@ -41,9 +42,19 @@ function dnb_sandbox() {
     return 0
 }
 
+function dnb_daemonize() {
+    local pkg="daemonize"
+    environment_check_specific "$pkg" || fatal "$pkg: environment check failed"
+    local m=$(get_field "$1" 2 "=")
+    local V=$(get_field "$2" 2 "=")
+    du_github "bmc" "daemonize" "release-" "$V" "$m"
+	bi_autoconf_make "$pkg" "$V" "" "" "$m"
+    i_make_binary_symlink "$pkg" "${V}" "$m"
+    return 0    
+}
 
-PACKAGES="yaml-cpp argsparser massivetests psubmit $TESTSUITE_PACKAGES"
-VERSIONS="yaml-cpp:0.6.3 argsparser:HEAD massivetests:HEAD^teststub_adding psubmit:HEAD $TESTSUITE_VERSIONS"
+PACKAGES="yaml-cpp argsparser massivetests psubmit daemonize $TESTSUITE_PACKAGES"
+VERSIONS="yaml-cpp:0.6.3 argsparser:HEAD massivetests:HEAD^teststub_adding psubmit:HEAD daemonize:1.7.8 $TESTSUITE_VERSIONS"
 TARGET_DIRS="sandbox"
 
 started=$(date "+%s")

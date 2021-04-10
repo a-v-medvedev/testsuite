@@ -6,6 +6,7 @@ function dnb_XAMG() {
     local V=$(get_field "$2" 2 "=")
     du_gitclone_recursive "$pkg" "https://$DNB_GITLAB_USERNAME:$DNB_GITLAB_ACCESS_TOKEN@gitlab.com/krasnopolsky_msu/XAMG.git" "$V" "$m"
     if this_mode_is_set "b" "$m"; then
+        [ -e ../env.sh -a ! -e env.sh ] && ln -s ../env.sh env.sh 
         cd "$pkg"-"$V".src
         local old_install_dir=$INSTALL_DIR
         cd ThirdParty
