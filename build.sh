@@ -32,7 +32,7 @@ set -u
 hwconf=${USER}-$(hostname)
 
 echo "Using configuration: $hwconf"
-if false; then
+#if false; then
     du_gitclone_recursive "confs" "$url" "HEAD" "du"
     basedir="confs-HEAD.src"
     hwdir=$basedir/$app/$testmodule/$hwconf
@@ -50,7 +50,7 @@ if false; then
     [ -r thirdparty/_local/conf.inc ] && rm -f thirdparty/_local/conf.inc
 
     ln -s $app.inc thirdparty/_local/conf.inc
-fi
+#fi
 
 cd thirdparty
 ./dnb.sh
