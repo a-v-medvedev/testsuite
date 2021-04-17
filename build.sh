@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function usage() {
-    echo "Usage: $(basename $0) <url> <app> [<testmodule>] [<subset>]"
+    echo "Usage: $(basename $0) [-f|-i] <url> <app> [<testmodule>] [<subset>]"
     echo "           url        -- a git repository URL suitable for git clone, with some"
     echo "                         credentials if required. This git repository must"
     echo "                         contain config directory with the appropriate files."
@@ -30,28 +30,30 @@ set -u
 [ -z "$url" -o -z "$app" -o -z "$testmodule" -o -z "$subset" ] && usage
 
 hwconf=${USER}-$(hostname)
+basedir="confs-HEAD.src"
 
 echo "Using configuration: $hwconf"
-#if false; then
+if [ ! -e "$basedir" ]; then
     du_gitclone_recursive "confs" "$url" "HEAD" "du"
-    basedir="confs-HEAD.src"
-    hwdir=$basedir/$app/$testmodule/$hwconf
+fi
 
-    [ ! -d "$hwdir" ] && fatal "can't find configuration: $hwconf in config directory. Tried to access directory: $hwdir."
+hwdir=$basedir/$app/$testmodule/$hwconf
 
-    [ -f "$hwdir"/env.sh ] && cp "$hwdir"/env.sh . || fatal "no env.sh file in $hwdir."
-    dir="$hwdir/$subset"
+[ ! -d "$hwdir" ] && fatal "can't find configuration: $hwconf in config directory. Tried to access directory: $hwdir."
 
-    [ ! -d "$dir" ] && fatal "can't find subset: $subset in config directory. Tried to access directory: $dir."
-    [ -e "$app.conf" ] && rm "$app.conf"
+[ -f "$hwdir"/env.sh ] && cp "$hwdir"/env.sh . || fatal "no env.sh file in $hwdir."
+dir="$hwdir/$subset"
 
-    ln -s "$dir" "$app.conf"
+[ ! -d "$dir" ] && fatal "can't find subset: $subset in config directory. Tried to access directory: $dir."
+[ -e "$app.conf" ] && rm "$app.conf"
 
-    [ -r thirdparty/_local/conf.inc ] && rm -f thirdparty/_local/conf.inc
+ln -s "$dir" "$app.conf"
 
-    ln -s $app.inc thirdparty/_local/conf.inc
-#fi
+[ -r thirdparty/_local/conf.inc ] && rm -f thirdparty/_local/conf.inc
 
+ln -s $app.inc thirdparty/_local/conf.inc
+
+if [ -e "thirdparty/XAMG-HEAD.src" ]; then dnbmode=":bi"; else dnbmode=""; fi
 cd thirdparty
-./dnb.sh
+./dnb.sh "$dnbmode"
 cd ..
