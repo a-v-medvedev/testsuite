@@ -17,7 +17,7 @@ url="https://github.com/a-v-medvedev/testsuite_confs.git"
 app="xamg"
 testdriver="functest"
 
-#do_build_and_test blas_small
-#do_build_and_test spmv_small
+do_build_and_test blas_small
+do_build_and_test spmv_small
 do_build_and_test solve_basic_small
 
