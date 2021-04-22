@@ -24,7 +24,13 @@ function dnb_XAMG() {
         b_make "$pkg" "$V" "$COMMANDS" "$PARAMS" "$m"
         mv "$pkg"-"$V".src/examples/test/xamg_test "$pkg"-"$V".src/examples/test/xamg_test_nv${i}
     done
-    local FILES="examples/test/xamg_test_nv* ThirdParty/hypre.bin/lib/*.so ThirdParty/scotch.bin/lib/*.so ThirdParty/argsparser.bin/*.so ThirdParty/yaml-cpp.bin/lib/*.so.*"
+    for i in 1 2 4 8; do
+        local PARAMS="BUILD=Debug CONFIG=${buildconf} XAMG_USER_FLAGS=\"-DXAMG_NV=${i}\""
+        b_make "$pkg" "$V" "$COMMANDS" "$PARAMS clean" "$m"
+        b_make "$pkg" "$V" "$COMMANDS" "$PARAMS" "$m"
+        mv "$pkg"-"$V".src/examples/test/xamg_test "$pkg"-"$V".src/examples/test/xamg_test_debug_nv${i}
+    done
+    local FILES="examples/test/xamg_test_nv* examples/test/xamg_test_debug_nv* ThirdParty/hypre.bin/lib/*.so ThirdParty/scotch.bin/lib/*.so ThirdParty/argsparser.bin/*.so ThirdParty/yaml-cpp.bin/lib/*.so.*"
     i_direct_copy "$pkg" "$V" "$FILES" "$m"
     i_make_binary_symlink "$pkg" "${V}" "$m"
     if this_mode_is_set "i" "$m"; then
