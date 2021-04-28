@@ -53,7 +53,8 @@ ln -s "$dir" "$app.conf"
 
 ln -s $app.inc thirdparty/_local/conf.inc
 
-if [ -e "thirdparty/XAMG-HEAD.src" ]; then dnbmode=":bi"; else dnbmode=""; fi
+s=$(ls -1d thirdparty/*-*.src | wc -l)
+if [ "$s" == "0" ]; then dnbmode=""; else dnbmode=":bi"; fi
 cd thirdparty
-./dnb.sh "$dnbmode"
+./is_rebuild_required.sh && ./dnb.sh "$dnbmode"
 cd ..
