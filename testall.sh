@@ -2,7 +2,11 @@
 
 function do_build_and_test() {
     ./build.sh  "$url" "$app" "$testdriver" "$1"
-    cp -r thirdparty/sandbox sandbox_$1
+    if [ -e sandbox_$1 ]; then
+        cp -ru thirdparty/sandbox/* sandbox_$1/
+    else
+        cp -r thirdparty/sandbox sandbox_$1
+    fi
     cd sandbox_$1
     rm env.sh
     ln -s ../env.sh .
