@@ -39,13 +39,13 @@ function dnb_XAMG() {
 }
 
 
-TESTSUITE_MODULE=functest
-TESTSUITE_PROJECT=xamg
+TESTSUITE_MODULE=${TESTSUITE_MODULE:-functest}
+TESTSUITE_PROJECT=${TESTSUITE_PROJECT:-xamg}
 TESTSUITE_CONF=${TESTSUITE_CONF:-generic}
 TESTSUITE_PACKAGES="XAMG"
 TESTSUITE_BRANCH=${TESTSUITE_BRANCH:-master}
 TESTSUITE_VERSIONS="XAMG:HEAD^$TESTSUITE_BRANCH"
-TESTSUITE_SCRIPT="competing"
+TESTSUITE_SCRIPT=${TESTSUITE_SCRIPT:-competing}
 
 [ -z "$DNB_GITLAB_USERNAME" ] && fatal "DNB_GITLAB_USERNAME must be set (credentials to access gitlab.com/krasnopolsky_msu)" || true
 [ -z "$DNB_GITLAB_ACCESS_TOKEN" ] && fatal "DNB_GITLAB_ACCESS_TOKEN must be set (credentials to access gitlab.com/krasnopolsky_msu)" || true

@@ -21,8 +21,11 @@ url="https://github.com/a-v-medvedev/testsuite_confs.git"
 app="xamg"
 testdriver="functest"
 
-export TESTSUITE_BRANCH=convergence_rework
-export TESTSUITE_CONF=generic
+export TESTSUITE_MODULE="$testdriver"
+export TESTSUITE_PROJECT="$app"
+export TESTSUITE_SCRIPT="competing"
+export TESTSUITE_BRANCH="convergence_rework"
+export TESTSUITE_CONF="generic"
 
 do_build_and_test blas_small
 do_build_and_test spmv_small
