@@ -27,7 +27,14 @@ export TESTSUITE_SCRIPT="competing"
 export TESTSUITE_BRANCH="convergence_rework"
 export TESTSUITE_CONF="generic"
 
+echo "============"
+date
+echo "============"
 do_build_and_test blas_small
 do_build_and_test spmv_small
 do_build_and_test solve_basic_small
+echo "============"
+date
+echo "============"
+
 
