@@ -17,24 +17,28 @@ function do_build_and_test() {
 }
 
 
-url="https://github.com/a-v-medvedev/testsuite_confs.git"
+default_url="https://github.com/a-v-medvedev/testsuite_confs.git"
+default_branch="master"
+default_conf="generic"
+
 app="xamg"
 testdriver="functest"
+url=${1:-${default_url}}
 
 export TESTSUITE_MODULE="$testdriver"
 export TESTSUITE_PROJECT="$app"
 export TESTSUITE_SCRIPT="competing"
-export TESTSUITE_BRANCH="convergence_rework"
-export TESTSUITE_CONF="generic"
+export TESTSUITE_BRANCH=${2:${default_branch}}
+export TESTSUITE_CONF=${3:${default_conf}}
 
 echo "============"
-date
+echo STARTED AT: $(date)
 echo "============"
 do_build_and_test blas_small
 do_build_and_test spmv_small
 do_build_and_test solve_basic_small
 echo "============"
-date
+echo ENDED AT: $(date)
 echo "============"
 
 
