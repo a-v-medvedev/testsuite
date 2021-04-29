@@ -41,4 +41,13 @@ echo "============"
 echo ENDED AT: $(date)
 echo "============"
 
+for i in sandbox_*; do
+    for j in $i/table.*; do
+        echo "--------------------------------"
+        echo "--> " $j
+        echo "--------------------------------"
+        cat $j
+        echo "--------------------------------"
+    done
+done
 
