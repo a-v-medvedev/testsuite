@@ -24,13 +24,13 @@ git submodule update --init --recursive
 ## Running the test cycle
 
 ```bash
-./testall_xamg_functest_competing.sh <URL> <branch> <conf>
+./testall_xamg_functest_competing.sh "URL" "branch" "conf"
 ```
 The arguments meaning is:
 
-1. `<URL>` is a git repository URL for config directory (see the config structure explanation below).
-1. `<branck>` is a XAMG repository branch to test
-1. `<conf>` is a XAMG build config to employ
+1. `"URL"` is a git repository URL for config directory (see the config structure explanation below).
+1. `"branch"` is a XAMG repository branch to test
+1. `"conf"` is a XAMG build config to employ
 
 The default values are currenly:
 
@@ -38,9 +38,9 @@ The default values are currenly:
 ./testall_xamg_functest_competing.sh "https://github.com/a-v-medvedev/testsuite_confs.git" master generic
 ```
 
-The result of running the script suite is a progress report which is written to stdout. The first part is stdout from the `./dnb.sh` script, located in `thirdparty` sub-directory. It shows the download and build progress for all pre-requisites and XAMG library itself.
+The result of running the script suite is a progress report which is written to stdout. The first part is stdout from the `./dnb.sh` script (`./dnb.sh` is an automated download and build script, located in `thirdparty` sub-directory). It shows the download and build progress for all pre-requisites and the XAMG library itself.
 
-The second part is an output from `massivetests` application, which simply shows how the testtasks are submitted to the queue and are running.
+The second part is an output from `massivetests` application, which simply shows how the test tasks are submitted to the queue and are running.
 
 The third part is a summary of all tests in a simple table form. For each test mode (that means: for each number of right-hand side vectors) and each test suite (currently we have three test suites: `blas_small`, `spmv_small`, `solve_basic_small`) we show the table of reslting states. The states are encoded as: `P` for `PASSED`, `F` for `FAILED`, `C` for `CRASH`, `A` for `ASSERT`, `T` for `TIMEOUT`, `E` for `EXCEPTION`, `N` for `NO-RESULTS`. 
 
@@ -54,10 +54,10 @@ Each `sandbox_XXX` directory contains the sub-directories for each testing confi
 The configuration repository must contain three-level directory hierarchy:
 
 ```bash
-xamg/functest/<ID>_<HOST>
+xamg/functest/USERID_HOST
 ```
 
-where `<ID>_<HOST>` is a code for target machine and an account on it (like: `alexey_aero2`).
+where `USERID_HOST` is a code for target machine and an account on it (like: `alexey_aero2`).
 
 Inside this directory stack one must have:
 ```bash
@@ -87,4 +87,11 @@ bash#
 
 ```
 where `input_XXX.yaml` files represent YAML-files for each testcase, `modeset.inc` and `param.inc` tune the `massivetests` application for this test suite, `psubmit_XXX.opt.TEMPLATE` files are simple runners for `xamg_test` and are generic and typically are not changed, the `test_items.yaml` contains all control values for the test cases for this suite. 
+
+One can introduce new testsuite by copying and modification of the existing test configurations. For ane new suite one should do the three basec steps:
+1. Create and add the `inpu_XXX.yaml` files for testcases to run.
+1. Modify `params.inc` to include these testcases. Change the testscope to some reasonable values (number of nodes, number of righ-hand side vectors, input matrices to use, etc).
+1. Create a `test_items.yaml` with enties for each output value you need to check in each test case.
+
+The `modeset.inc` and `psubmit_XXX.opt.TEMPLATE` can be typically taken without changes.
 
