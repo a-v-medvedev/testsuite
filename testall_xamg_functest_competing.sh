@@ -12,7 +12,7 @@ function do_build_and_test() {
     ln -s ../env.sh .
     rm psubmit.bin
     ln -s ../thirdparty/psubmit.bin .
-    ./competing_massive_tests.sh
+    ./functional_massive_tests.sh
     cd ..
 }
 
@@ -27,7 +27,7 @@ url=${1:-${default_url}}
 
 export TESTSUITE_MODULE="$testdriver"
 export TESTSUITE_PROJECT="$app"
-export TESTSUITE_SCRIPT="competing"
+export TESTSUITE_SCRIPT="functional"
 export TESTSUITE_BRANCH=${2:${default_branch}}
 export TESTSUITE_CONF=${3:${default_conf}}
 
@@ -40,9 +40,9 @@ do_build_and_test solve_basic_small
 echo "============"
 echo ENDED AT: $(date)
 echo "============"
-
 for i in sandbox_*; do
-    for j in $i/table.*; do
+    echo "--- $(echo $i | sed 's/sandbox_//'): $(wc -l < $i/summary/references.txt) failure references"
+    for j in $i/summary/table.*; do
         echo "--------------------------------"
         echo "--> " $j
         echo "--------------------------------"
@@ -50,4 +50,3 @@ for i in sandbox_*; do
         echo "--------------------------------"
     done
 done
-

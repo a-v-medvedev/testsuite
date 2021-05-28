@@ -18,6 +18,9 @@ function dnb_massivetests() {
     if [ "$TESTSUITE_SCRIPT" == "competing" ]; then
         local C="scripts/competing"
         FILES="$FILES $C/clean.sh $C/compare.sh $C/competing_massive_tests.sh $C/make_table.sh $C/script-postproc.sh"
+    elif [ "$TESTSUITE_SCRIPT" == "functional" ]; then
+        local C="scripts/functional"
+        FILES="$FILES $C/clean.sh $C/extract.sh $C/functional_massive_tests.sh $C/make_table.sh $C/script-postproc.sh"
     fi
     this_mode_is_set "i" "$m" && i_direct_copy "$pkg" "$V" "$FILES" "$m"
     i_make_binary_symlink "$pkg" "${V}" "$m"
