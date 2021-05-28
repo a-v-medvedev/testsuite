@@ -34,19 +34,28 @@ export TESTSUITE_CONF=${3:${default_conf}}
 echo "============"
 echo STARTED AT: $(date)
 echo "============"
-do_build_and_test blas_small
-do_build_and_test spmv_small
-do_build_and_test solve_basic_small
+
+for suite in blas_small spmv_small solve_basic_small; do
+#for suite in spmv_small; do
+    do_build_and_test $suite
+done
+
 echo "============"
 echo ENDED AT: $(date)
 echo "============"
+timestamp=$(date +%s)
 for i in sandbox_*; do
-    echo "--- $(echo $i | sed 's/sandbox_//'): $(wc -l < $i/summary/references.txt) failure references"
+    suite=$(echo $i | sed 's/sandbox_//')
+    nfailed=$(wc -l < $i/summary/references.txt)
+    echo "----------------------------------------"
+    echo "--- ${suite}: $nfailed failure references"
+    echo "----------------------------------------"
     for j in $i/summary/table.*; do
-        echo "--------------------------------"
-        echo "--> " $j
-        echo "--------------------------------"
+        echo "----------------------------------------"
+        echo "--> " $(basename $j)
+        echo "----------------------------------------"
         cat $j
-        echo "--------------------------------"
+        echo "----------------------------------------"
     done
+    tar czf summary_${suite}_${nfailed}F_${timestamp}.tar.gz $i/summary/*
 done
