@@ -10,7 +10,7 @@ function dnb_qubiq-solver-tests() {
         cd "$pkg-$V".src
         [ -e ../env.sh -a ! -e env.sh ] && ln -s ../env.sh env.sh
         export INSTALL_DIR="$PWD"
-        bash -x ./dnb.sh
+        ./dnb.sh
         cd ..
         export INSTALL_DIR=$OLD_INSTALL_DIR
     fi

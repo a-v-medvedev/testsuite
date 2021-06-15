@@ -15,7 +15,7 @@ function do_build_and_test() {
     rm psubmit.bin
     ln -s ../thirdparty/psubmit.bin .
     export LD_LIBRARY_PATH=lib:$LD_LIBRARY_PATH
-    ./functional_massive_tests.sh
+    ./functional_massive_tests.sh || fatal "./functional_massive_tests.sh failed"
     cd ..
 }
 
