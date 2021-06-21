@@ -8,7 +8,7 @@ function dnb_qubiq-solver-tests() {
     if this_mode_is_set "b" "$m"; then
         local OLD_INSTALL_DIR="$PWD"
         cd "$pkg-$V".src
-        [ -e ../env.sh -a ! -e env.sh ] && ln -s ../env.sh env.sh
+        [ -e ../env.sh -a ! -e env.sh ] && ln -s ../../env.sh env.sh
         export INSTALL_DIR="$PWD"
         export PACKAGE_VERSIONS="qubiq-solver:HEAD^functest_connection"
         ./dnb.sh
