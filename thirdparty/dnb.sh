@@ -26,6 +26,7 @@ function dnb_sandbox() {
     echo ">> Making sandbox:"
     mkdir -p sandbox
     [ -e sandbox/psubmit.bin ] || ln -s ../psubmit.bin sandbox/
+    cp -va argsparser.bin/*.so sandbox/
     cp -va massivetests.bin/* sandbox/
 	cp -va ${TESTSUITE_PROJECT}.bin/* sandbox/
     cp -va ../${TESTSUITE_PROJECT}.conf/* sandbox/
