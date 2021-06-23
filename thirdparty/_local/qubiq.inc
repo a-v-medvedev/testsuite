@@ -11,6 +11,7 @@ function dnb_qubiq-solver-tests() {
         [ -e ../../env.sh -a ! -e env.sh ] && ln -s ../../env.sh env.sh
         export INSTALL_DIR="$PWD"
         export PACKAGE_VERSIONS="qubiq-solver:HEAD^functest_connection"
+        export DNB_SUPERIOR=".."
         ./dnb.sh
         cd ..
         export INSTALL_DIR=$OLD_INSTALL_DIR
