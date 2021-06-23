@@ -53,7 +53,7 @@ ln -s "$dir" "$app.conf"
 
 ln -s $app.inc thirdparty/_local/conf.inc
 
-s=$(ls -1d thirdparty/*-*.src | wc -l)
+s=$(ls -1d thirdparty/*-*.src 2>/dev/null | wc -l)
 if [ "$s" == "0" ]; then dnbmode=""; else dnbmode=":bi"; fi
 cd thirdparty
 ./is_rebuild_required.sh && ./dnb.sh "$dnbmode" || ./dnb.sh massivetests:i

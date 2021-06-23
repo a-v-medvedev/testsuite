@@ -32,10 +32,17 @@ function dnb_sandbox() {
     cp -va ../${TESTSUITE_PROJECT}.conf/* sandbox/
     cp -va daemonize.bin/sbin/daemonize sandbox/psubmit.bin
     cd sandbox
-    for i in psubmit_*.opt.TEMPLATE; do
-        local sfx=$(echo $i | sed 's/psubmit_//;s/.opt.TEMPLATE//')
-        template_to_psubmitopts . "$sfx"
-    done
+    local nps=$(ls -1 psubmit_*.opt.TEMPLATE 2> /dev/null | wc -l)
+    if [ "$nps" != "0" ]; then
+        for i in psubmit_*.opt.TEMPLATE; do
+            local sfx=$(echo $i | sed 's/psubmit_//;s/.opt.TEMPLATE//')
+            template_to_psubmitopts . "$sfx"
+        done
+    fi
+    nps=$(ls -1 psubmit.opt.TEMPLATE 2> /dev/null | wc -l)
+    if [ "$nps" != "0" ]; then
+        template_to_psubmitopts . ""
+    fi
     [ -e thirdparty ] || ln -s .. thirdparty
     [ -e env.sh ] || ln -s ../../env.sh env.sh
     cd ..
