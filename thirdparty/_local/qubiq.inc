@@ -10,7 +10,7 @@ function dnb_qubiq-solver-tests() {
         cd "$pkg-$V".src
         [ -e ../../env.sh -a ! -e env.sh ] && ln -s ../../env.sh env.sh
         export INSTALL_DIR="$PWD"
-        export PACKAGE_VERSIONS="qubiq-solver:HEAD^functest_connection"
+        export PACKAGE_VERSIONS="qubiq-solver:HEAD^$TESTSUITE_BRANCH"
         export DNB_SUPERIOR=".."
         ./dnb.sh
         cd ..
@@ -30,7 +30,7 @@ TESTSUITE_PROJECT=${TESTSUITE_PROJECT:-qubiq}
 TESTSUITE_CONF=${TESTSUITE_CONF:-generic}
 TESTSUITE_PACKAGES="qubiq-solver-tests"
 TESTSUITE_BRANCH=${TESTSUITE_BRANCH:-master}
-TESTSUITE_VERSIONS="qubiq-solver-tests:HEAD^$TESTSUITE_BRANCH"
+TESTSUITE_VERSIONS="qubiq-solver-tests:HEAD^master"
 TESTSUITE_SCRIPT=${TESTSUITE_SCRIPT:-functional}
 
 [ -z "$DNB_GITLAB_USERNAME" ] && fatal "DNB_GITLAB_USERNAME must be set (credentials to access gitlab.com/qubiq)" || true

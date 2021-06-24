@@ -38,7 +38,7 @@ function do_build_and_test() {
 
 
 default_url="https://github.com/a-v-medvedev/testsuite_confs.git"
-default_branch="master"
+default_branch="functest_connection"
 default_conf="generic"
 
 app="qubiq"
@@ -51,7 +51,7 @@ export TESTSUITE_SCRIPT="functional"
 export TESTSUITE_BRANCH=${2:-${default_branch}}
 export TESTSUITE_CONF=${3:-${default_conf}}
 
-echo "APP: $app"
+echo "APPLICATION: $app"
 echo "TESTDRIVER: $testdriver"
 echo "URL: $url"
 echo "SCRIPT: $TESTSUITE_SCRIPT"
