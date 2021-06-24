@@ -5,6 +5,16 @@ function dnb_qubiq-solver-tests() {
     local m=$(get_field "$1" 2 "=")
     local V=$(get_field "$2" 2 "=")
     du_gitclone_recursive "$pkg" "https://$DNB_GITLAB_USERNAME:$DNB_GITLAB_ACCESS_TOKEN@gitlab.com/qubiq/qubiq-solver-tests.git" "$V" "$m"
+
+    #####
+    if this_mode_is_set "d" "$m"; then
+        local revision=$(git ls-remote --heads https://$DNB_GITLAB_USERNAME:$DNB_GITLAB_ACCESS_TOKEN@gitlab.com/qubiq/qubiq-solver | grep "$TESTSUITE_BRANCH" | awk '{print $1}')
+        [ -e "$pkg".dwn ] && echo $revision > "$pkg".dwn/revision
+        [ -e "$pkg".src ] && echo $revision > "$pkg".src/revision
+    fi
+    #####
+
+    
     if this_mode_is_set "b" "$m"; then
         local OLD_INSTALL_DIR="$PWD"
         cd "$pkg-$V".src
@@ -21,6 +31,8 @@ function dnb_qubiq-solver-tests() {
     i_make_binary_symlink "$pkg" "${V}" "$m"
     if this_mode_is_set "i" "$m"; then
         [ -e qubiq.bin ] || ln -s "$pkg".bin qubiq.bin
+        [ -e "$pkg".dwn/revision ] && cp "$pkg".dwn/revision qubiq.bin/revision
+        [ -e "$pkg".src/revision ] && cp "$pkg".src/revision qubiq.bin/revision
     fi
 }
 
