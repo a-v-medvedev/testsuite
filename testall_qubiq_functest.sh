@@ -22,6 +22,7 @@ function do_build_and_test() {
         cp -r thirdparty/sandbox sandbox_$1
     fi
     cd sandbox_$1
+    [ -f revision ] && echo "REVISION: $(cat revision)"
     rm env.sh
     ln -s ../env.sh .
     rm psubmit.bin
@@ -60,6 +61,8 @@ echo "CONF: $TESTSUITE_CONF"
 echo "STARTED_AT: $(date)"
 
 timestamp=$(date +%s)
+
+echo "TIMESTAMP: $timestamp"
 
 for suite in basic; do
     echo "SUITE_START: $suite"
