@@ -38,7 +38,7 @@ function do_build_and_test() {
 
 
 default_url="https://github.com/a-v-medvedev/testsuite_confs.git"
-default_branch="functest_connection"
+default_branch="master"
 default_conf="generic"
 
 app="qubiq"
