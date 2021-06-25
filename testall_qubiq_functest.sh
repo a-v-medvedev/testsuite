@@ -9,6 +9,14 @@ function report() {
     return 1
 }
 
+function get_timestamp() {
+    secs=$(date +%s)
+    day=$(date "+%Y.%m.%d" --date="@$secs")
+    rest=$(expr "$secs" % 86400)
+    code=$(awk -v N=$rest 'END { x1=(N/25/25/25); x2=(N/25/25)%25; x3=(N/25)%25; x4=N%25; printf "%c%c%c%c\n", 65+x1, 65+x2, 65+x3, 65+x4 }' < /dev/null)
+    echo $day.$code
+}
+
 function do_build_and_test() {
     echo RUN: ./build.sh  "$url" "$app" "$testdriver" "$1"
     echo ">> ..."
@@ -29,6 +37,7 @@ function do_build_and_test() {
     ln -s ../thirdparty/psubmit.bin .
     export LD_LIBRARY_PATH=lib:$LD_LIBRARY_PATH
     echo RUN: ./functional_massive_tests.sh in sandbox_$1 directory
+    echo ">> ..."
     local t3=$(date +%s)
     ./functional_massive_tests.sh > test_routine_$1.log 2>&1 || report "test_routine_failed" || return 1
     local t4=$(date +%s)
@@ -60,7 +69,7 @@ echo "BRANCH: $TESTSUITE_BRANCH"
 echo "CONF: $TESTSUITE_CONF"
 echo "STARTED_AT: $(date)"
 
-timestamp=$(date +%s)
+timestamp=$(get_timestamp)
 
 echo "TIMESTAMP: $timestamp"
 
