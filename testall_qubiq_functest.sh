@@ -88,7 +88,7 @@ for suite in basic; do
                 ;;
             *) fatal "Unknown state after 'do_build_and_test $suite' execution."
         esac
-        echo "STATUS: ${suite}: failrure on stage: $(cat timing_$suite.log)"
+        echo "STATUS: ${suite}: failure on stage: $(cat timing_$suite.log)"
         cat log_$suite.log
         SUMMARY=summary_${suite}_$(cat timing_$suite.log)_failure_${timestamp}.tar.gz
         tar czf "$SUMMARY" log_$suite.log
