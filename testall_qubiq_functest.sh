@@ -92,6 +92,7 @@ for suite in basic; do
         cat log_$suite.log
         SUMMARY=summary_${suite}_$(cat timing_$suite.log)_failure_${timestamp}.tar.gz
         tar czf "$SUMMARY" log_$suite.log
+        mkdir -p sandbox_${suite}
     else
         echo "$RESULT" > timing_$suite.log
         echo "STATUS: ${suite}: actions complete."
@@ -101,27 +102,30 @@ done
 
 echo "ENDED_AT: $(date)"
 
-for i in sandbox_*; do
-    suite=$(echo $i | sed 's/sandbox_//')
-    nfailed=$(wc -l < $i/summary/references.txt)
-    echo
-    echo "----------------------------------------"
-    if grep -q ' sec' timing_$suite.log; then
-        echo "--- ${suite}: $(cat $i/summary/stats.txt)"
-        echo "--- ${suite}: recoreded $nfailed failure references"
-        echo "--- ${suite}: processing time: $(cat timing_$suite.log)"
+if [ $(ls -1d sandbox_* 2>/dev/null | wc -l) != "0" ]; then 
+    for i in sandbox_*; do
+        suite=$(echo $i | sed 's/sandbox_//')
+        nfailed=X
+        [ -f $i/summary/references.txt ] && nfailed=$(wc -l < $i/summary/references.txt)
+        echo
         echo "----------------------------------------"
-        for j in $i/summary/table.*; do
+        if grep -q ' sec' timing_$suite.log; then
+            echo "--- ${suite}: $(cat $i/summary/stats.txt)"
+            echo "--- ${suite}: recoreded $nfailed failure references"
+            echo "--- ${suite}: processing time: $(cat timing_$suite.log)"
             echo "----------------------------------------"
-            echo "--> " $(basename $j)
-            echo "----------------------------------------"
-            cat $j
-            echo "----------------------------------------"
-        done
-        SUMMARY=summary_${suite}_${nfailed}F_${timestamp}.tar.gz
-        tar czf "$SUMMARY" $i/summary/*
-    else
-        echo "--- ${suite}: failrure on stage: $(cat timing_$suite.log)"
-    fi
-done
+            for j in $i/summary/table.*; do
+                echo "----------------------------------------"
+                echo "--> " $(basename $j)
+                echo "----------------------------------------"
+                cat $j
+                echo "----------------------------------------"
+            done
+            SUMMARY=summary_${suite}_${nfailed}F_${timestamp}.tar.gz
+            tar czf "$SUMMARY" $i/summary/*
+        else
+            echo "--- ${suite}: failure on stage: $(cat timing_$suite.log)"
+        fi
+    done
+fi
 
