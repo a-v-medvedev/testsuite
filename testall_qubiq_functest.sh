@@ -111,7 +111,7 @@ if [ $(ls -1d sandbox_* 2>/dev/null | wc -l) != "0" ]; then
         echo "----------------------------------------"
         if grep -q ' sec' timing_$suite.log; then
             echo "--- ${suite}: $(cat $i/summary/stats.txt)"
-            echo "--- ${suite}: recoreded $nfailed failure references"
+            echo "--- ${suite}: recorded $nfailed failure references"
             echo "--- ${suite}: processing time: $(cat timing_$suite.log)"
             echo "----------------------------------------"
             for j in $i/summary/table.*; do
