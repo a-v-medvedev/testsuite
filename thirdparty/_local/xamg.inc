@@ -13,8 +13,6 @@ function dnb_XAMG() {
         INSTALL_DIR=$PWD
         export DNB_SUPERIOR="../.."
         ./dnb.sh
-        #rm argsparser.bin
-        #ln -s ../../argsparser.bin argsparser.bin
         INSTALL_DIR="$old_install_dir"
         cd $INSTALL_DIR
     fi
