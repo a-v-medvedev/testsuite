@@ -30,7 +30,7 @@ function dnb_XAMG() {
         b_make "$pkg" "$V" "$COMMANDS" "$PARAMS" "$m"
         mv "$pkg"-"$V".src/examples/test/xamg_test "$pkg"-"$V".src/examples/test/xamg_test_debug_nv${i}
     done
-    local FILES="examples/test/xamg_test_nv* examples/test/xamg_test_debug_nv* libxamgsep.so ThirdParty/hypre.bin/lib/*.so ThirdParty/scotch.bin/lib/*.so ThirdParty/argsparser.bin/*.so ThirdParty/yaml-cpp.bin/lib/*.so.*"
+    local FILES="examples/test/xamg_test_nv* examples/test/xamg_test_debug_nv* examples/test/libxamgsep.so ThirdParty/hypre.bin/lib/*.so ThirdParty/scotch.bin/lib/*.so ThirdParty/argsparser.bin/*.so ThirdParty/yaml-cpp.bin/lib/*.so.*"
     i_direct_copy "$pkg" "$V" "$FILES" "$m"
     i_make_binary_symlink "$pkg" "${V}" "$m"
     if this_mode_is_set "i" "$m"; then
