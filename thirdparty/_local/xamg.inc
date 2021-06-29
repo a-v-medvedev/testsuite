@@ -11,9 +11,10 @@ function dnb_XAMG() {
         local old_install_dir=$INSTALL_DIR
         cd ThirdParty
         INSTALL_DIR=$PWD
+        DNB_SUPERIOR=".."
         ./dnb.sh
-        rm argsparser.bin
-        ln -s ../../argsparser.bin argsparser.bin
+        #rm argsparser.bin
+        #ln -s ../../argsparser.bin argsparser.bin
         INSTALL_DIR="$old_install_dir"
         cd $INSTALL_DIR
     fi
