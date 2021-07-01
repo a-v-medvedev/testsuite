@@ -22,7 +22,7 @@ function dnb_qubiq-solver-tests() {
         export INSTALL_DIR="$PWD"
         export PACKAGE_VERSIONS="qubiq-solver:HEAD^$TESTSUITE_BRANCH"
         export DNB_SUPERIOR=".."
-        ./dnb.sh
+        ./dnb.sh ":$m"
         cd ..
         export INSTALL_DIR=$OLD_INSTALL_DIR
     fi
