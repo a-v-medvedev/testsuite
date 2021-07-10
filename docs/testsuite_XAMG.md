@@ -4,19 +4,19 @@ This document contains a quick reference on running the Continous Integration su
 
 ## Getting the source code of testsuite
 
-The source code of the test suite is available as a public repository at `github.com`. The URL of the repository is:&nbsp;*https://github.com/a-v-medvedev/testsuite.git*
+The source code of the test suite is available as a public repository at `github.com`. The URL of the repository is:&nbsp;*https://gitlab.com/krasnopolsky_msu/xamg-testsuite-conf.git*
 
 **NOTE:** it is important to add the `--recursive` flag for a `git clone` command when you get the source code
 for the first time:
 
 ```bash
-git clone --recursive https://github.com/a-v-medvedev/testsuite.git
+git clone --recursive https://gitlab.com/krasnopolsky_msu/xamg-testsuite-conf.git
 ```
 
 If the `git clone` command has been already done without this option in place, you may init the sub-modules with a separate `git submodule update...` command later:
 
 ```bash
-git clone https://github.com/a-v-medvedev/testsuite.git
+git clone https://gitlab.com/krasnopolsky_msu/xamg-testsuite-conf.git
 cd XAMG
 git submodule update --init --recursive
 ```
@@ -24,7 +24,7 @@ git submodule update --init --recursive
 ## Running the test cycle
 
 ```bash
-./testall_xamg_functest_competing.sh "URL" "branch" "conf"
+./testall_xamg_functional.sh "URL" "branch" "conf"
 ```
 The arguments meaning is:
 
@@ -35,7 +35,7 @@ The arguments meaning is:
 The default values are currenly:
 
 ```bash
-./testall_xamg_functest_competing.sh "https://github.com/a-v-medvedev/testsuite_confs.git" 
+./testall_xamg_functest.sh "https://gitlab.com/krasnopolsky_msu/xamg-testsuite-conf.git" 
    "master" "generic"
 ```
 

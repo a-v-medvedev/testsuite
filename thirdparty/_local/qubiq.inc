@@ -21,6 +21,7 @@ function dnb_qubiq-solver-tests() {
         [ -e ../../env.sh -a ! -e env.sh ] && ln -s ../../env.sh env.sh
         export INSTALL_DIR="$PWD"
         export PACKAGE_VERSIONS="qubiq-solver:HEAD^$TESTSUITE_BRANCH"
+        export CXXFLAGS="-DWITH_AUTOTEST"
         export DNB_SUPERIOR=".."
         ./dnb.sh ":$m"
         cd ..
