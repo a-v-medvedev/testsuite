@@ -6,7 +6,7 @@ source thirdparty/dbscripts/base.inc
 [ -z "$DNB_GITLAB_ACCESS_TOKEN" ] && echo "DNB_GITLAB_ACCESS_TOKEN environment variable must be defined" && exit 1
 
 default_url="https://$DNB_GITLAB_USERNAME:$DNB_GITLAB_ACCESS_TOKEN@gitlab.com/qubiq/qubiq-testsuite-conf.git"
-default_branch="functest_connection"
+default_branch="master"
 default_conf="generic"
 
 app="qubiq"

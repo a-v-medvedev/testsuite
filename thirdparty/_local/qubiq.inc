@@ -35,7 +35,7 @@ function dnb_qubiq-solver-tests() {
         [ -e qubiq.bin ] || ln -s "$pkg".bin qubiq.bin
         [ -e "$pkg".dwn/revision ] && cp "$pkg".dwn/revision qubiq.bin/revision
         [ -e "$pkg-$V".src/revision ] && cp "$pkg-$V".src/revision qubiq.bin/revision
-        cat > "qubiq.bin/post-copy-chkpnt.sh" <<EOM
+        cat > "qubiq.bin/post-copy-chkpnt.sh" <<'EOM'
 #!/bin/bash
 
 wld="$1"
@@ -51,7 +51,7 @@ if [ -d ${from}/chk ]; then
 fi
 EOM
 
-        cat > "qubiq.bin/pre-copy-chkpnt.sh" <<EOM
+        cat > "qubiq.bin/pre-copy-chkpnt.sh" <<'EOM'
 #!/bin/bash
 
 wld="$1"
@@ -67,7 +67,7 @@ if [ -d ${from} ]; then
     cp -a ${from} ${to}/chk
 fi
 EOM
-		chmod +x "qubiq.bin/post-copy-chkpnt.sh" "qubiq.bin/pre-copy-chkpnt.sh"
+		chmod +x qubiq.bin/*.sh
     fi
 }
 
