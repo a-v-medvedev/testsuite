@@ -27,6 +27,7 @@ function dnb_qubiq-solver-tests() {
         cd ..
         export INSTALL_DIR=$OLD_INSTALL_DIR
     fi
+
     local FILES="sandbox/psubmit.opt sandbox/qubiq-solver sandbox/run sandbox/yaml sandbox/lib"
     i_direct_copy "$pkg" "$V" "$FILES" "$m"
     i_make_binary_symlink "$pkg" "${V}" "$m"
@@ -34,9 +35,41 @@ function dnb_qubiq-solver-tests() {
         [ -e qubiq.bin ] || ln -s "$pkg".bin qubiq.bin
         [ -e "$pkg".dwn/revision ] && cp "$pkg".dwn/revision qubiq.bin/revision
         [ -e "$pkg-$V".src/revision ] && cp "$pkg-$V".src/revision qubiq.bin/revision
+        cat > "qubiq.bin/post-copy-chkpnt.sh" <<EOM
+#!/bin/bash
+
+wld="$1"
+conf="$2"
+wprt="$3"
+
+from=out.$PSUBMIT_JOBID
+to=chk.${wld}__${wprt}__${conf}__np${PSUBMIT_NP}
+
+if [ -d ${from}/chk ]; then 
+    [ -e "${to}" ] && rm -rf "${to}"
+    cp -a ${from}/chk ${to}
+fi
+EOM
+
+        cat > "qubiq.bin/pre-copy-chkpnt.sh" <<EOM
+#!/bin/bash
+
+wld="$1"
+conf="$2"
+wprt="$3"
+
+to=out.${PSUBMIT_JOBID}
+from=chk.${wld}__${wprt}__${conf}__np$PSUBMIT_NP
+
+if [ -d ${from} ]; then 
+    [ -e "${to}" ] && rm -rf "${to}"
+    mkdir -p "${to}"
+    cp -a ${from} ${to}/chk
+fi
+EOM
+		chmod +x "qubiq.bin/post-copy-chkpnt.sh" "qubiq.bin/pre-copy-chkpnt.sh"
     fi
 }
-
 
 TESTSUITE_MODULE=${TESTSUITE_MODULE:-functest}
 TESTSUITE_PROJECT=${TESTSUITE_PROJECT:-qubiq}
