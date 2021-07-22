@@ -17,15 +17,6 @@ function parse_yaml {
    }'
 }
 
-
-#i4p-v-supersonic_inlet/Tube_20K.cgns:
-#    values:
-#        scheme/time_step: 8
-#        scheme/time: 5.0000000000000002e-05
-#        scheme/tau: 1.086402911447908e-06
-#        grid/nverts: 1619
-#        grid/ncells: 7564
-
 function print_norms() {
      for v in $VALS; do
         echo $v | grep -q norms_ || continue
@@ -42,12 +33,13 @@ function get_exec_arg() {
 N=$(ls -1 results.*/result*.yaml 2>/dev/null | wc -l)
 [ "$N" == "0" ] && exit 0
 for i in results.*/result*.yaml; do
-    echo "# from: " $i
     j=$(echo $i | sed 's!/result.!/psubmit_wrapper_output.!;s/\.yaml$//')
     WLD=$(get_exec_arg "$j" "-yaml" | sed 's!./input_!!;s/\.yaml$//')
     WPRT=$(get_exec_arg "$j" "-grid")
     VALS=$(parse_yaml "$i")
+    if [ ! -z "$1" -a "$WLD" != "$1" ]; then continue; fi
     eval $VALS
+    echo "# from: " $i
     echo "${WLD}/${WPRT}:"
     echo "    values:"
     echo "        scheme/time: " $scheme_time
