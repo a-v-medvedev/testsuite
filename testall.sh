@@ -18,28 +18,34 @@ function get_timestamp() {
 }
 
 function do_build_and_test() {
-    echo RUN: ./build.sh  "$TESTSUITE_CONF_URL" "$TESTSUITE_PROJECT" "$TESTSUITE_MODULE" "$1"
+    local suite="$1"
+    echo RUN: ./build.sh  "$TESTSUITE_CONF_URL" "$TESTSUITE_PROJECT" "$TESTSUITE_MODULE" "$suite"
     echo ">> ..."
     local t1=$(date +%s)
-    ./build.sh  "$TESTSUITE_CONF_URL" "$TESTSUITE_PROJECT" "$TESTSUITE_MODULE" "$1" > build_$1.log 2>&1 || report "build_failed" || return 1
+    ./build.sh  "$TESTSUITE_CONF_URL" "$TESTSUITE_PROJECT" "$TESTSUITE_MODULE" "$suite" > build_$suite.log 2>&1 || report "build_failed" || return 1
     local t2=$(date +%s)
     echo ">> done in $(expr $t2 - $t1) sec."
-    if [ -e sandbox_$1 ]; then
-        cp -ru thirdparty/sandbox/* sandbox_$1/
+    if [ -z "$TESTSUITE_DONT_ALWAYS_REBUILD" ]; then
+        rm -rf sandbox_$suite
+        cp -r thirdparty/sandbox sandbox_$suite
     else
-        cp -r thirdparty/sandbox sandbox_$1
+        if [ -e sandbox_$suite ]; then
+            cp -ru thirdparty/sandbox/* sandbox_$suite/
+        else
+            cp -r thirdparty/sandbox sandbox_$suite
+        fi
     fi
-    cd sandbox_$1
+    cd sandbox_$suite
     [ -f revision ] && echo "REVISION: $(cat revision)"
     rm env.sh
     ln -s ../env.sh .
     rm psubmit.bin
     ln -s ../thirdparty/psubmit.bin .
     export LD_LIBRARY_PATH=lib:$LD_LIBRARY_PATH
-    echo RUN: ./functional_massive_tests.sh in sandbox_$1 directory
+    echo RUN: ./functional_massive_tests.sh in sandbox_$suite directory
     echo ">> ..."
     local t3=$(date +%s)
-    ./functional_massive_tests.sh > test_routine_$1.log 2>&1 || report "test_routine_failed" || return 1
+    ./functional_massive_tests.sh > test_routine_$suite.log 2>&1 || report "test_routine_failed" || return 1
     local t4=$(date +%s)
     cd ..
     echo ">> done in $(expr $t4 - $t3) sec."
