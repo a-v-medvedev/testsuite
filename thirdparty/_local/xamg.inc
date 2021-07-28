@@ -33,6 +33,10 @@ function dnb_XAMG() {
     i_direct_copy "$pkg" "$V" "$FILES" "$m"
     i_make_binary_symlink "$pkg" "${V}" "$m"
     if this_mode_is_set "i" "$m"; then
+    #        cd "${pkg}".bin
+    #    mkdir -p lib
+    #    mv *.so lib
+    #    cd ..
         [ -e xamg.bin ] || ln -s XAMG.bin xamg.bin
     fi
 }
