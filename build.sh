@@ -56,9 +56,10 @@ ln -s $app.inc thirdparty/_local/conf.inc
 
 export TESTSUITE_SUITE_NAME="$suite_name"
 
+s=$(ls -1d thirdparty/*-*.src 2>/dev/null | wc -l)
+
 if [ -z "$dont_always_rebuild" ]; then
 
-s=$(ls -1d thirdparty/*-*.src 2>/dev/null | wc -l)
 if [ "$s" != "0" ]; then
     rm -rf thirdparty/*-*.src thirdparty/sandbox
 fi
