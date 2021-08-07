@@ -17,26 +17,27 @@ function dnb_XAMG() {
         cd $INSTALL_DIR
     fi
     local COMMANDS="cd examples/test"
-    for i in 1 2 4 8; do
-        local PARAMS="BUILD=Release CONFIG=${buildconf} XAMG_USER_FLAGS=\"-DXAMG_NV=${i}\""
+    for nv in 1 2 16; do
+        local PARAMS="BUILD=Release CONFIG=${buildconf} XAMG_USER_FLAGS=-DXAMG_NV=${nv}"
         b_make "$pkg" "$V" "$COMMANDS" "$PARAMS clean" "$m"
         b_make "$pkg" "$V" "$COMMANDS" "$PARAMS" "$m"
-        mv "$pkg"-"$V".src/examples/test/xamg_test "$pkg"-"$V".src/examples/test/xamg_test_nv${i}
+        mv "$pkg"-"$V".src/examples/test/xamg_test "$pkg"-"$V".src/examples/test/xamg_test_nv${nv}
     done
-    for i in 1 2 4 8; do
-        local PARAMS="BUILD=Debug CONFIG=${buildconf} XAMG_USER_FLAGS=\"-DXAMG_NV=${i}\" WITH_SEPARATE_OBJECTS=TRUE"
-        b_make "$pkg" "$V" "$COMMANDS" "$PARAMS clean" "$m"
-        b_make "$pkg" "$V" "$COMMANDS" "$PARAMS" "$m"
-        mv "$pkg"-"$V".src/examples/test/xamg_test "$pkg"-"$V".src/examples/test/xamg_test_debug_nv${i}
-    done
-    local FILES="examples/test/xamg_test_nv* examples/test/xamg_test_debug_nv* examples/test/libxamgsep.so ThirdParty/hypre.bin/lib/*.so ThirdParty/scotch.bin/lib/*.so ThirdParty/argsparser.bin/*.so ThirdParty/yaml-cpp.bin/lib/*.so.*"
+    #    for i in 1 2 4 8; do
+    #    local PARAMS="BUILD=Debug CONFIG=${buildconf} XAMG_USER_FLAGS=\"-DXAMG_NV=${i}\" WITH_SEPARATE_OBJECTS=TRUE"
+    #    b_make "$pkg" "$V" "$COMMANDS" "$PARAMS clean" "$m"
+    #    b_make "$pkg" "$V" "$COMMANDS" "$PARAMS" "$m"
+    #    mv "$pkg"-"$V".src/examples/test/xamg_test "$pkg"-"$V".src/examples/test/xamg_test_debug_nv${i}
+    #done
+    ########  examples/test/libxamgsep.so examples/test/xamg_test_debug_nv*
+    local FILES="examples/test/xamg_test_nv* ThirdParty/hypre.bin/lib/*.so ThirdParty/scotch.bin/lib/*.so ThirdParty/argsparser.bin/*.so ThirdParty/yaml-cpp.bin/lib/*.so.*"
     i_direct_copy "$pkg" "$V" "$FILES" "$m"
     i_make_binary_symlink "$pkg" "${V}" "$m"
     if this_mode_is_set "i" "$m"; then
-    #        cd "${pkg}".bin
-    #    mkdir -p lib
-    #    mv *.so lib
-    #    cd ..
+        cd "${pkg}".bin
+        mkdir -p lib
+        mv *.so lib
+        cd ..
         [ -e xamg.bin ] || ln -s XAMG.bin xamg.bin
     fi
 }
