@@ -18,8 +18,8 @@ export TESTSUITE_PROJECT="$app"
 export TESTSUITE_SCRIPT="functional"
 export TESTSUITE_BRANCH=${2:-${default_branch}}
 export TESTSUITE_CONF_URL=${1:-${default_url}}
-#export TESTSUITE_SUITES="build_variations blas_small spmv_small solve_basic_small"
-export TESTSUITE_SUITES="blas_small spmv_small solve_basic_small"
+export TESTSUITE_SUITES="build_variations blas_small spmv_small solve_basic_small"
+#export TESTSUITE_SUITES="blas_small spmv_small solve_basic_small"
 export TESTSUITE_BUILD_CONF=${3:-${default_conf}}
 
 source ./testall.sh
