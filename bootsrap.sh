@@ -10,8 +10,8 @@ source thirdparty/dbscripts/funcs.inc
 source thirdparty/dbscripts/db.inc
 
 CONF_URL="$1"
-APP="$2"
-MODULE="$3"
+app="$2"
+testmodule="$3"
 
 basedir="confs-HEAD.src"
 
@@ -26,7 +26,7 @@ hwconf=${USER}-$(hostname)
 
 echo "Using configuration: $hwconf"
 if [ ! -e "$basedir" ]; then
-    du_gitclone_recursive "confs" "$url" "HEAD" "du"
+    du_gitclone_recursive "confs" "$CONF_URL" "HEAD" "du"
 fi
 
 appdir="$basedir/$app/$testmodule"
@@ -34,18 +34,21 @@ hwdir="$basedir/$app/$testmodule/$hwconf"
 [ ! -d "$hwdir" ] && fatal "can't find configuration: $hwconf in config directory. Tried to access directory: $hwdir."
 
 if check_if_exists "$appdir/testall_*.sh"; then
-    for i in "$appdir/testall_*.sh"; do
+    for i in $appdir/testall_*.sh; do
         lnk=$(basename "$i")
         rm -f "$lnk"
         ln -s "$i" "$lnk"
+        echo "Made symlink: $lnk (to: $i)"
     done
 fi
 
 if check_if_exists "$hwdir/testall_*.sh"; then
-    for i in "$appdir/testall_*.sh"; do
+    for i in $appdir/testall_*.sh; do
         lnk=$(basename "$i")
+        [ -e "$lnk" -o -L "$lnk" ] && echo "NOTE: symlink $lnk will be overwritten."
         rm -f "$lnk"
         ln -s "$i" "$lnk"
+        echo "Made symlink: $lnk (to: $i)"
     done
 fi
 
@@ -55,8 +58,13 @@ suite_dir="$hwdir/$suite_name"
 [ -e thirdparty/_local/conf.inc -o -L thirdparty/_local/conf.inc ] && rm -f thirdparty/_local/conf.inc
 if [ -e thirdparty/_local/$app.inc ]; then
     ln -s $app.inc thirdparty/_local/conf.inc
+    echo "Build script to use: thirdparty/_local/$app.inc"
 else
     [ -e "$appdir/build.inc" ] || fatal "can't find build script for application: $app. Tried to access file: $appdir/build.inc."
     ln -s ../../$appdir/build.inc thirdparty/_local/conf.inc
+    echo "Build script to use: $appdir/build.inc"
 fi
+
+echo "Testsuite bootstrap finished, now use testall_*.sh scripts for test action."
+echo "Directory $basedir is a working git clone of configuration repository."
 
