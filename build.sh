@@ -43,29 +43,27 @@ hwconf=${USER}-$(hostname)
 basedir="confs-HEAD.src"
 
 echo "Using configuration: $hwconf"
-if [ ! -e "$basedir" ]; then
-    du_gitclone_recursive "confs" "$url" "HEAD" "du"
-fi
+#if [ ! -e "$basedir" ]; then
+#    du_gitclone_recursive "confs" "$url" "HEAD" "du"
+#fi
 
 appdir="$basedir/$app/$testmodule"
 hwdir="$basedir/$app/$testmodule/$hwconf"
 [ ! -d "$hwdir" ] && fatal "can't find configuration: $hwconf in config directory. Tried to access directory: $hwdir."
 
-[ -f "$hwdir"/env.sh ] && cp "$hwdir"/env.sh . || fatal "no env.sh file in $hwdir."
+#[ -f "$hwdir"/env.sh ] && cp "$hwdir"/env.sh . || fatal "no env.sh file in $hwdir."
 suite_dir="$hwdir/$suite_name"
-
 [ ! -d "$suite_dir" ] && fatal "can't find suite_name: $suite_name in config directory. Tried to access directory: $suite_dir."
 [ -e "$app.conf" ] && rm "$app.conf"
 ln -s "$suite_dir" "$app.conf"
 
-[ -e thirdparty/_local/conf.inc -o -L thirdparty/_local/conf.inc ] && rm -f thirdparty/_local/conf.inc
-if [ -e thirdparty/_local/$app.inc ]; then
-    ln -s $app.inc thirdparty/_local/conf.inc
-else
-    [ -e "$appdir/build.inc" ] || fatal "can't find build script for application: $app. Tried to access file: $appdir/build.inc."
-    ln -s $PWD/$appdir/build.inc thirdparty/_local/conf.inc
-fi
-
+#[ -e thirdparty/_local/conf.inc -o -L thirdparty/_local/conf.inc ] && rm -f thirdparty/_local/conf.inc
+#if [ -e thirdparty/_local/$app.inc ]; then
+#    ln -s $app.inc thirdparty/_local/conf.inc
+#else
+#    [ -e "$appdir/build.inc" ] || fatal "can't find build script for application: $app. Tried to access file: $appdir/build.inc."
+#    ln -s $PWD/$appdir/build.inc thirdparty/_local/conf.inc
+#fi
 
 export TESTSUITE_SUITE_NAME="$suite_name"
 
