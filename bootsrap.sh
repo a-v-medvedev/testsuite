@@ -66,5 +66,5 @@ else
 fi
 
 echo "Testsuite bootstrap finished, now use testall_*.sh scripts for test action."
-echo "Directory $basedir is a working git clone of configuration repository."
+echo "NOTE: Directory $basedir/ is a working git clone of configuration repository."
 
