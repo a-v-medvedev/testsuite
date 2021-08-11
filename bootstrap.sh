@@ -25,9 +25,11 @@ check_if_exists thirdparty/_local/conf.inc && fatal 'thirdparty is not clear, ca
 hwconf=${USER}-$(hostname)
 
 echo "Using configuration: $hwconf"
+echo "Doing git clone for a configuration repository:"
 if [ ! -e "$basedir" ]; then
     du_gitclone_recursive "confs" "$CONF_URL" "HEAD" "du"
 fi
+echo "Cloning finished."
 
 appdir="$basedir/$app/$testmodule"
 hwdir="$basedir/$app/$testmodule/$hwconf"
@@ -65,6 +67,8 @@ else
     echo "Build script to use: $appdir/build.inc"
 fi
 
-echo "Testsuite bootstrap finished, now use testall_*.sh scripts for test action."
-echo "NOTE: Directory $basedir/ is a working git clone of configuration repository."
+echo "------"
+echo "> Testsuite bootstrap finished, now use testall_*.sh scripts for test action."
+echo "> NOTE: Directory $basedir/ is a working git clone of configuration repository."
+echo "> Use it to save your work."
 

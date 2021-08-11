@@ -41,7 +41,8 @@ function do_build_and_test() {
     ln -s ../env.sh .
     rm psubmit.bin
     ln -s ../thirdparty/psubmit.bin .
-    export LD_LIBRARY_PATH=lib:$LD_LIBRARY_PATH
+    rm thirdparty
+    ln -s ../thirdparty .
     echo RUN: ./functional_massive_tests.sh in sandbox_$suite directory
     echo ">> ..."
     local t3=$(date +%s)
