@@ -121,5 +121,12 @@ if [ $(ls -1d sandbox_* 2>/dev/null | wc -l) != "0" ]; then
             echo "--- ${suite}: failure on stage: $(cat timing_$suite.log)"
         fi
     done
+    for i in sandbox_*; do
+        suite=$(echo $i | sed 's/sandbox_//')
+        if grep -q ' sec' timing_$suite.log; then
+            [ -f $i/stats.txt ] && echo "Suite ${suite}:" $(cat $i/stats.txt)
+        fi
+    done    
 fi
+
 
