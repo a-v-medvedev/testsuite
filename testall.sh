@@ -96,37 +96,41 @@ done
 
 echo "ENDED_AT: $(date)"
 
-if [ $(ls -1d sandbox_* 2>/dev/null | wc -l) != "0" ]; then 
-    for i in sandbox_*; do
-        suite=$(echo $i | sed 's/sandbox_//')
-        nfailed=X
-        [ -f $i/summary/references.txt ] && nfailed=$(wc -l < $i/summary/references.txt)
-        echo
+for suite in ${TESTSUITE_SUITES}; do
+    i="sandbox_"$suite
+    if [ $(ls -1d "$i" 2>/dev/null | wc -l) != "1" ]; then 
+        continue
+    fi
+    nfailed=X
+    [ -f $i/summary/references.txt ] && nfailed=$(wc -l < $i/summary/references.txt)
+    echo
+    echo "----------------------------------------"
+    if grep -q ' sec' timing_$suite.log; then
+        echo "--- ${suite}: $(cat $i/summary/stats.txt)"
+        echo "--- ${suite}: recorded $nfailed failure references"
+        echo "--- ${suite}: processing time: $(cat timing_$suite.log)"
         echo "----------------------------------------"
-        if grep -q ' sec' timing_$suite.log; then
-            echo "--- ${suite}: $(cat $i/summary/stats.txt)"
-            echo "--- ${suite}: recorded $nfailed failure references"
-            echo "--- ${suite}: processing time: $(cat timing_$suite.log)"
+        for j in $i/summary/table.*; do
             echo "----------------------------------------"
-            for j in $i/summary/table.*; do
-                echo "----------------------------------------"
-                echo "--> " $(basename $j)
-                echo "----------------------------------------"
-                cat $j
-                echo "----------------------------------------"
-            done
-            SUMMARY=summary_${suite}_${nfailed}F_${timestamp}.tar.gz
-            tar czf "$SUMMARY" $i/summary/*
-        else
-            echo "--- ${suite}: failure on stage: $(cat timing_$suite.log)"
-        fi
-    done
-    for i in sandbox_*; do
-        suite=$(echo $i | sed 's/sandbox_//')
-        if grep -q ' sec' timing_$suite.log; then
-            [ -f $i/stats.txt ] && echo "Suite ${suite}:" $(cat $i/stats.txt)
-        fi
-    done    
-fi
+            echo "--> " $(basename $j)
+            echo "----------------------------------------"
+            cat $j
+            echo "----------------------------------------"
+        done
+        SUMMARY=summary_${suite}_${nfailed}F_${timestamp}.tar.gz
+        tar czf "$SUMMARY" $i/summary/*
+    else
+        echo "--- ${suite}: failure on stage: $(cat timing_$suite.log)"
+    fi
+done
+for suite in ${TESTSUITE_SUITES}; do
+    i="sandbox_"$suite
+    if [ $(ls -1d "$i" 2>/dev/null | wc -l) != "1" ]; then 
+        continue
+    fi
+    if grep -q ' sec' timing_$suite.log; then
+        [ -f $i/stats.txt ] && echo "Suite ${suite}:" $(cat $i/stats.txt)
+    fi
+done    
 
 
