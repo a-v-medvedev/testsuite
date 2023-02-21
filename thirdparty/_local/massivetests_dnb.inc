@@ -1,3 +1,5 @@
+# vim: set filetype=sh :
+
 function dnb_massivetests() {
     local pkg="massivetests"
     environment_check_specific "$pkg" || fatal "$pkg: environment check failed"
