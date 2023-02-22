@@ -14,7 +14,7 @@ app="$2"
 testmodule="$3"
 confbranch=${4:-HEAD}
 
-basedir="confs-HEAD.src"
+basedir="confs-${confbranch}.src"
 
 [ -d "$basedir" ] && fatal 'configuration tree is already cloned. Cannot bootstrap.'
 check_if_exists thirdparty/*.dwn && fatal 'thirdparty is not clear, cannot bootstrap (thirdparty/*.dwn).'
