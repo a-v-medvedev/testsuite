@@ -12,6 +12,7 @@ source thirdparty/dbscripts/db.inc
 CONF_URL="$1"
 app="$2"
 testmodule="$3"
+confbranch=${4:-HEAD}
 
 basedir="confs-HEAD.src"
 
@@ -27,7 +28,7 @@ hwconf=${USER}-$(hostname)
 echo "Using configuration: $hwconf"
 echo "Doing git clone for a configuration repository:"
 if [ ! -e "$basedir" ]; then
-    du_gitclone_recursive "confs" "$CONF_URL" "HEAD" "du"
+    du_gitclone_recursive "confs" "$CONF_URL" "$confbranch" "du"
 fi
 echo "Cloning finished."
 
@@ -54,7 +55,7 @@ if check_if_exists "$hwdir/testall_*.sh"; then
     done
 fi
 
-[ -f "$hwdir"/env.sh ] && cp "$hwdir"/env.sh . || fatal "no env.sh file in $hwdir."
+[ -f "$hwdir"/env.sh ] && ln -s "$hwdir"/env.sh . || fatal "no env.sh file in $hwdir."
 suite_dir="$hwdir/$suite_name"
 
 [ -e thirdparty/_local/conf.inc -o -L thirdparty/_local/conf.inc ] && rm -f thirdparty/_local/conf.inc
