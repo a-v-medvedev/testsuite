@@ -4,6 +4,12 @@ source thirdparty/dbscripts/base.inc
 
 RESULT=""
 
+function printline() {
+    local len=$1
+    printf '%*s' "$len" | tr ' ' '-'
+    echo
+}
+
 function report() {
     RESULT="$1"
     return 1
@@ -104,18 +110,19 @@ for suite in ${TESTSUITE_SUITES}; do
     nfailed=X
     [ -f $i/summary/references.txt ] && nfailed=$(wc -l < $i/summary/references.txt)
     echo
-    echo "----------------------------------------"
+    printline 50
     if grep -q ' sec' timing_$suite.log; then
         echo "--- ${suite}: $(cat $i/summary/stats.txt)"
         echo "--- ${suite}: recorded $nfailed failure references"
         echo "--- ${suite}: processing time: $(cat timing_$suite.log)"
-        echo "----------------------------------------"
+        printline 50
         for j in $i/summary/table.*; do
-            echo "----------------------------------------"
+            LEN=$(head -n1 $j | wc -c)
+            printline $LEN
             echo "--> " $(basename $j)
-            echo "----------------------------------------"
+            printline $LEN
             cat $j
-            echo "----------------------------------------"
+            printline $LEN
         done
         SUMMARY=summary_${suite}_${nfailed}F_${timestamp}.tar.gz
         tar czf "$SUMMARY" $i/summary/*
