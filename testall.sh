@@ -117,7 +117,7 @@ for suite in ${TESTSUITE_SUITES}; do
         echo "--- ${suite}: processing time: $(cat timing_$suite.log)"
         printline 50
         for j in $i/summary/table.*; do
-            LEN=$(head -n1 $j | wc -c)
+            LEN=$(head -n1 $j | awk '{print length($0)}')
             printline $LEN
             echo "--> " $(basename $j)
             printline $LEN
