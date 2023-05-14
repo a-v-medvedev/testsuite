@@ -4,6 +4,25 @@ source thirdparty/dbscripts/base.inc
 
 RESULT=""
 
+function getnumfiles() {
+    ls -1d "$1" 2>/dev/null | wc -l
+}
+
+
+function getfirstlinelen() {
+    head -n1 $1 | awk '{print length($0)}'
+}
+
+function getmaxlinelen() {
+    awk 'BEGIN{LEN=0}{l=length($0); LEN=(LEN<l?l:LEN)} END{print LEN}' < $1
+}
+
+function printline() {
+    local len=$1
+    printf '%*s' "$len" | tr ' ' '-'
+    echo
+}
+
 function report() {
     RESULT="$1"
     return 1
@@ -46,11 +65,12 @@ function do_build_and_test() {
     echo RUN: ./functional_massive_tests.sh in sandbox_$suite directory
     echo ">> ..."
     local t3=$(date +%s)
-    ./functional_massive_tests.sh > test_routine_$suite.log 2>&1 || report "test_routine_failed" || return 1
+    ./functional_massive_tests.sh > test_routine_$suite.log 2>&1 || report "test_routine_failed" || { cd ..; return 1; }
     local t4=$(date +%s)
     cd ..
     echo ">> done in $(expr $t4 - $t3) sec."
-    report "$(expr $t2 - $t1) sec / $(expr $t4 - $t3) sec" || return 0
+    report "$(expr $t2 - $t1) sec / $(expr $t4 - $t3) sec"  
+    return 0
 }
 
 echo "APPLICATION: $TESTSUITE_PROJECT"
@@ -98,24 +118,23 @@ echo "ENDED_AT: $(date)"
 
 for suite in ${TESTSUITE_SUITES}; do
     i="sandbox_"$suite
-    if [ $(ls -1d "$i" 2>/dev/null | wc -l) != "1" ]; then 
-        continue
-    fi
+    [ $(getnumfiles "$i") == "1" ] || continue
     nfailed=X
     [ -f $i/summary/references.txt ] && nfailed=$(wc -l < $i/summary/references.txt)
     echo
-    echo "----------------------------------------"
+    printline 50
     if grep -q ' sec' timing_$suite.log; then
         echo "--- ${suite}: $(cat $i/summary/stats.txt)"
         echo "--- ${suite}: recorded $nfailed failure references"
         echo "--- ${suite}: processing time: $(cat timing_$suite.log)"
-        echo "----------------------------------------"
+        printline 50
         for j in $i/summary/table.*; do
-            echo "----------------------------------------"
+            LEN=$(getfirstlinelen $j)
+            printline $LEN
             echo "--> " $(basename $j)
-            echo "----------------------------------------"
+            printline $LEN
             cat $j
-            echo "----------------------------------------"
+            printline $LEN
         done
         SUMMARY=summary_${suite}_${nfailed}F_${timestamp}.tar.gz
         tar czf "$SUMMARY" $i/summary/*
@@ -125,9 +144,7 @@ for suite in ${TESTSUITE_SUITES}; do
 done
 for suite in ${TESTSUITE_SUITES}; do
     i="sandbox_"$suite
-    if [ $(ls -1d "$i" 2>/dev/null | wc -l) != "1" ]; then 
-        continue
-    fi
+    [ $(getnumfiles "$i") == "1" ] || continue
     if grep -q ' sec' timing_$suite.log; then
         [ -f $i/stats.txt ] && echo "Suite ${suite}:" $(cat $i/stats.txt)
     fi

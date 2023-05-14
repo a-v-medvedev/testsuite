@@ -29,7 +29,7 @@ function dnb_sandbox() {
     cp -va argsparser.bin/*.so sandbox/
     cp -va massivetests.bin/* sandbox/
 	cp -va ${TESTSUITE_PROJECT}.bin/* sandbox/
-    cp -va ../${TESTSUITE_PROJECT}.conf/* sandbox/
+    cp -v ../${TESTSUITE_PROJECT}.conf/* sandbox/
     cp -va daemonize.bin/sbin/daemonize sandbox/psubmit.bin
     cd sandbox
     local nps=$(ls -1 psubmit_*.opt.TEMPLATE 2> /dev/null | wc -l)
@@ -62,7 +62,7 @@ function dnb_daemonize() {
 }
 
 PACKAGES="yaml-cpp argsparser massivetests psubmit daemonize $TESTSUITE_PACKAGES"
-VERSIONS="yaml-cpp:0.6.3 argsparser:HEAD massivetests:HEAD^teststub_adding psubmit:HEAD daemonize:1.7.8 $TESTSUITE_VERSIONS"
+VERSIONS="yaml-cpp:0.6.3 argsparser:HEAD massivetests:HEAD^inout_rework psubmit:HEAD daemonize:1.7.8 $TESTSUITE_VERSIONS"
 TARGET_DIRS="sandbox"
 
 started=$(date "+%s")
