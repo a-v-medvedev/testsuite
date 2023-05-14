@@ -62,7 +62,7 @@ function dnb_daemonize() {
 }
 
 PACKAGES="yaml-cpp argsparser massivetests psubmit daemonize $TESTSUITE_PACKAGES"
-VERSIONS="yaml-cpp:0.6.3 argsparser:HEAD massivetests:HEAD^inout_rework psubmit:HEAD daemonize:1.7.8 $TESTSUITE_VERSIONS"
+VERSIONS="yaml-cpp:0.6.3 argsparser:HEAD massivetests:HEAD^teststub_adding psubmit:HEAD daemonize:1.7.8 $TESTSUITE_VERSIONS"
 TARGET_DIRS="sandbox"
 
 started=$(date "+%s")
