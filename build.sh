@@ -77,7 +77,7 @@ if [ -z "$dont_always_rebuild" ]; then
         rm -rf thirdparty/sandbox
         cd thirdparty
         for pkg in $TESTSUITE_PACKAGES; do
-            ./dnb.sh ${pkg}:dubi
+            ./dnb.sh ${pkg}
         done
         ./dnb.sh :i
         cd ..
