@@ -14,6 +14,11 @@ function dnb_massivetests() {
     #local PARAMS="THIRDPARTY=.. CXXFLAGS=-DDEBUG=1"
     local PARAMS="THIRDPARTY=.."
     PARAMS="$PARAMS MODULE=$TESTSUITE_MODULE"
+    set +u    
+    local cxxdef=""
+    [ -z "$MASSTIVETESTS_CXX" ] || cxxdef="CXX=$MASSTIVETESTS_CXX"
+    set -u
+    PARAMS="$PARAMS $cxxdef"
     b_make "$pkg" "$V" "$COMMANDS" "$PARAMS clean" "$m"
     b_make "$pkg" "$V" "$COMMANDS" "$PARAMS" "$m"
     local FILES="massivetest scripts/massive_tests.inc"
