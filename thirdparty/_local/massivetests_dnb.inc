@@ -16,7 +16,7 @@ function dnb_massivetests() {
     PARAMS="$PARAMS MODULE=$TESTSUITE_MODULE"
     set +u    
     local cxxdef=""
-    [ -z "$MASSTIVETESTS_CXX" ] || cxxdef="CXX=$MASSTIVETESTS_CXX"
+    [ -z "$MASSIVETESTS_CXX" ] || cxxdef="CXX=$MASSIVETESTS_CXX"
     set -u
     PARAMS="$PARAMS $cxxdef"
     b_make "$pkg" "$V" "$COMMANDS" "$PARAMS clean" "$m"
