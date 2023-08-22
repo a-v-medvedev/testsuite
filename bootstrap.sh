@@ -24,6 +24,7 @@ check_if_exists thirdparty/*-* && fatal 'thirdparty is not clear, cannot bootstr
 check_if_exists thirdparty/_local/conf.inc && fatal 'thirdparty is not clear, cannot bootstrap (thirdparty/_local/conf.inc).'
 
 hwconf=${USER}-$(hostname)
+[ -z "$TESTSUITE_HWCONF" ] || hwconf="$TESTSUITE_HWCONF"
 
 echo "Using configuration: $hwconf"
 echo "Doing git clone for a configuration repository:"

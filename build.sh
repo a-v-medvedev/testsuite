@@ -40,6 +40,9 @@ set -u
 [ -z "$url" -o -z "$app" -o -z "$testmodule" -o -z "$suite_name" ] && usage
 
 hwconf=${USER}-$(hostname)
+set +u
+[ -z "$TESTSUITE_HWCONF" ] || hwconf="$TESTSUITE_HWCONF"
+set -u
 basedir="confs-*.src"
 if [ $(ls -1d $basedir 2>/dev/null | wc -l) != "1" ]; then
     fatal "Can't find the configuration directory to use; tried to find: $basedir." 
