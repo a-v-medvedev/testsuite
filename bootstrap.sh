@@ -22,6 +22,8 @@ check_if_exists thirdparty/*.bin && fatal 'thirdparty is not clear, cannot boots
 check_if_exists thirdparty/*.src && fatal 'thirdparty is not clear, cannot bootstrap (thirdparty/*.src).'
 check_if_exists thirdparty/*-* && fatal 'thirdparty is not clear, cannot bootstrap (thirdparty/*-*).'
 check_if_exists thirdparty/_local/conf.inc && fatal 'thirdparty is not clear, cannot bootstrap (thirdparty/_local/conf.inc).'
+check_if_exists build-psubmit.opt && rm -f build-psubmit.opt
+check_if_exists env.sh && rm -f env.sh
 
 hwconf=${USER}-$(hostname)
 [ -z "$TESTSUITE_HWCONF" ] || hwconf="$TESTSUITE_HWCONF"
@@ -57,6 +59,8 @@ if check_if_exists "$hwdir/testall_*.sh"; then
 fi
 
 [ -f "$hwdir"/env.sh ] && ln -s "$hwdir"/env.sh . || fatal "no env.sh file in $hwdir."
+[ -f "$hwdir"/build-psubmit.opt ] && ln -s "$hwdir"/build-psubmit.opt . || fatal "no env.sh file in $hwdir."
+
 suite_dir="$hwdir/$suite_name"
 
 [ -e thirdparty/_local/conf.inc -o -L thirdparty/_local/conf.inc ] && rm -f thirdparty/_local/conf.inc

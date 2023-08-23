@@ -92,3 +92,4 @@ else
     ./is_rebuild_required.sh && ./dnb.sh "$dnbmode" || ./dnb.sh massivetests:i
     cd ..
 fi
+echo "Build is done."

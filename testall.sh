@@ -38,10 +38,19 @@ function get_timestamp() {
 
 function do_build_and_test() {
     local suite="$1"
+
+
+
     echo RUN: ./build.sh  "$TESTSUITE_CONF_URL" "$TESTSUITE_PROJECT" "$TESTSUITE_MODULE" "$suite"
     echo ">> ..."
     local t1=$(date +%s)
-    ./build.sh  "$TESTSUITE_CONF_URL" "$TESTSUITE_PROJECT" "$TESTSUITE_MODULE" "$suite" > build_$suite.log 2>&1 || report "build_failed" || return 1
+    if [ -e build-psubmit.opt ]; then
+        psubmit.sh -n1 -o build-psubmit.opt -a "$TESTSUITE_CONF_URL $TESTSUITE_PROJECT $TESTSUITE_MODULE $suite" > build_$suite.log 2>&1
+        grep -q "Build is done." build_$suite.log || report "build_failed" || return 1
+        ### FIXME: find output >  build_$suite.log
+    else
+        ./build.sh  "$TESTSUITE_CONF_URL" "$TESTSUITE_PROJECT" "$TESTSUITE_MODULE" "$suite" > build_$suite.log 2>&1 || report "build_failed" || return 1
+    fi
     local t2=$(date +%s)
     echo ">> done in $(expr $t2 - $t1) sec."
     if [ -z "$TESTSUITE_DONT_ALWAYS_REBUILD" ]; then
