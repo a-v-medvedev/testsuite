@@ -14,6 +14,12 @@ app="$2"
 testmodule="$3"
 confbranch=${4:-HEAD}
 
+if [ "$CONF_URL" == "clean" ]; then
+    rm -rf confs-*.src
+    rm -rf thirdparty/*.dwn thirdparty/*.bin thirdparty/*.src thirdparty/*-* thirdparty/_local/conf.inc thirdparty/sandbox build-psubmit.opt env.sh
+    exit 0
+fi
+
 basedir="confs-${confbranch}.src"
 
 [ -d "$basedir" ] && fatal 'configuration tree is already cloned. Cannot bootstrap.'
