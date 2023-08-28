@@ -65,7 +65,7 @@ if check_if_exists "$hwdir/testall_*.sh"; then
 fi
 
 [ -f "$hwdir"/env.sh ] && ln -s "$hwdir"/env.sh . || fatal "no env.sh file in $hwdir."
-[ -f "$hwdir"/build-psubmit.opt ] && ln -s "$hwdir"/build-psubmit.opt . || fatal "no env.sh file in $hwdir."
+[ -f "$hwdir"/build-psubmit.opt ] && ln -s "$hwdir"/build-psubmit.opt .
 
 suite_dir="$hwdir/$suite_name"
 
