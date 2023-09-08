@@ -1,3 +1,4 @@
 [submodule "thirdparty/dbscripts"]
 	path = thirdparty/dbscripts
 	url = https://github.com/a-v-medvedev/dbscripts.git
+    branch = master
