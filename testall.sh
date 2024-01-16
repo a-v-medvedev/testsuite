@@ -53,16 +53,8 @@ function do_build_and_test() {
     fi
     local t2=$(date +%s)
     echo ">> done in $(expr $t2 - $t1) sec."
-    if [ -z "$TESTSUITE_DONT_ALWAYS_REBUILD" ]; then
-        rm -rf sandbox_$suite
-        cp -r thirdparty/sandbox sandbox_$suite
-    else
-        if [ -e sandbox_$suite ]; then
-            cp -ru thirdparty/sandbox/* sandbox_$suite/
-        else
-            cp -r thirdparty/sandbox sandbox_$suite
-        fi
-    fi
+    rm -rf sandbox_$suite
+    cp -r thirdparty/sandbox sandbox_$suite
     cd sandbox_$suite
     [ -f revision ] && echo "REVISION: $(cat revision)"
     rm env.sh
@@ -151,6 +143,7 @@ for suite in ${TESTSUITE_SUITES}; do
         echo "--- ${suite}: failure on stage: $(cat timing_$suite.log)"
     fi
 done
+
 for suite in ${TESTSUITE_SUITES}; do
     i="sandbox_"$suite
     [ $(getnumfiles "$i") == "1" ] || continue

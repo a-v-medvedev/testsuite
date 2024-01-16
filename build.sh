@@ -34,7 +34,6 @@ testmodule="$3"
 suite_name="$4"
 [ -z "$testmodule" ] && testmodule="functest" 
 [ -z "$suite_name" ] && suite_name="basic" 
-dont_always_rebuild="$TESTSUITE_DONT_ALWAYS_REBUILD"
 set -u
 
 [ -z "$url" -o -z "$app" -o -z "$testmodule" -o -z "$suite_name" ] && usage
@@ -62,34 +61,25 @@ suite_dir="$hwdir/$suite_name"
 ln -s "$suite_dir" "$app.conf"
 
 export TESTSUITE_SUITE_NAME="$suite_name"
-
-if [ -z "$dont_always_rebuild" ]; then
-    TESTSUITE_PACKAGES_EXPR=$(grep 'TESTSUITE_PACKAGES=' thirdparty/_local/conf.inc)
-    PREREQUISITES=""
-    ALL_PREREQ=$(check_prereq_exists "argsparser" && check_prereq_exists "daemonize" && check_prereq_exists "psubmit" && check_prereq_exists "yaml-cpp" && check_prereq_exists "massivetests" && echo OK || true)
-    if [ -z "$TESTSUITE_PACKAGES_EXPR" -o "$ALL_PREREQ" != "OK" ]; then
-        rm -rf thirdparty/*-*.src thirdparty/*.bin thirdparty/sandbox
-        cd thirdparty
-        ./dnb.sh
-        cd ..
-    else
-        eval $TESTSUITE_PACKAGES_EXPR
-        for pkg in $TESTSUITE_PACKAGES; do
-            rm -rf thirdparty/${pkg}-*.src
-        done
-        rm -rf thirdparty/sandbox
-        cd thirdparty
-        for pkg in $TESTSUITE_PACKAGES; do
-            ./dnb.sh ${pkg}
-        done
-        ./dnb.sh :i
-        cd ..
-    fi
-else
-    s=$(ls -1d thirdparty/*-*.src 2>/dev/null | wc -l)
-    if [ "$s" == "0" ]; then dnbmode=""; else dnbmode=":bi"; fi
+TESTSUITE_PACKAGES_EXPR=$(grep 'TESTSUITE_PACKAGES=' thirdparty/_local/conf.inc)
+PREREQUISITES=""
+ALL_PREREQ=$(check_prereq_exists "argsparser" && check_prereq_exists "daemonize" && check_prereq_exists "psubmit" && check_prereq_exists "yaml-cpp" && check_prereq_exists "massivetests" && echo OK || true)
+if [ -z "$TESTSUITE_PACKAGES_EXPR" -o "$ALL_PREREQ" != "OK" ]; then
+    rm -rf thirdparty/*-*.src thirdparty/*.bin thirdparty/sandbox
     cd thirdparty
-    ./is_rebuild_required.sh && ./dnb.sh "$dnbmode" || ./dnb.sh massivetests:i
+    ./dnb.sh
+    cd ..
+else
+    eval $TESTSUITE_PACKAGES_EXPR
+    for pkg in $TESTSUITE_PACKAGES; do
+        rm -rf thirdparty/${pkg}-*.src
+    done
+    rm -rf thirdparty/sandbox
+    cd thirdparty
+    for pkg in $TESTSUITE_PACKAGES; do
+        ./dnb.sh ${pkg}
+    done
+    ./dnb.sh :i
     cd ..
 fi
 echo "Build is done."
