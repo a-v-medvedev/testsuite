@@ -87,7 +87,7 @@ timestamp=$(get_timestamp)
 export TESTSUITE_TIMESTAMP="$timestamp"
 echo "TIMESTAMP: $timestamp"
 
-rm -rf thirdparty/argsparser.bin thirdparty/daemonize.bin thirdparty/psubmit.bin thirdparty/yaml-cpp.bin thirdparty/massivetests.bin
+#rm -rf thirdparty/argsparser.bin thirdparty/daemonize.bin thirdparty/psubmit.bin thirdparty/yaml-cpp.bin thirdparty/massivetests.bin
 for suite in ${TESTSUITE_SUITES}; do
     echo "SUITE_START: $suite"
     do_build_and_test $suite

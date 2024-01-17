@@ -30,6 +30,7 @@ function dnb_sandbox() {
     cp -va massivetests.bin/* sandbox/
 	cp -va ${TESTSUITE_PROJECT}.bin/* sandbox/
     cp -v ../${TESTSUITE_PROJECT}.conf/* sandbox/
+    rm -f sandbox/psubmit.bin/daemonize
     cp -va daemonize.bin/sbin/daemonize sandbox/psubmit.bin
     cd sandbox
     local nps=$(ls -1 psubmit_*.opt.TEMPLATE 2> /dev/null | wc -l)
