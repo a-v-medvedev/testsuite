@@ -11,7 +11,6 @@ function dnb_massivetests() {
         [ -f "$INSTALL_DIR/argsparser.bin/argsparser.h" ] || fatal "$pkg: installed argsparser is required to build"
     fi
     local COMMANDS=""
-    #local PARAMS="THIRDPARTY=.. CXXFLAGS=-DDEBUG=1"
     local PARAMS="THIRDPARTY=.."
     PARAMS="$PARAMS MODULE=$TESTSUITE_MODULE"
     set +u    
@@ -22,12 +21,11 @@ function dnb_massivetests() {
     b_make "$pkg" "$V" "$COMMANDS" "$PARAMS clean" "$m"
     b_make "$pkg" "$V" "$COMMANDS" "$PARAMS" "$m"
     local FILES="massivetest scripts/massive_tests.inc"
-    if [ "$TESTSUITE_SCRIPT" == "competing" ]; then
-        local C="scripts/competing"
-        FILES="$FILES $C/clean.sh $C/compare.sh $C/competing_massive_tests.sh $C/make_table.sh $C/script-postproc.sh"
-    elif [ "$TESTSUITE_SCRIPT" == "functional" ]; then
+    if [ "$TESTSUITE_SCRIPT" == "functional" ]; then
         local C="scripts/functional"
         FILES="$FILES $C/clean.sh $C/extract.sh $C/functional_massive_tests.sh $C/make_table.sh $C/script-postproc.sh"
+    else
+        fatal "building massivetests: unsupported value of TESTSUITE_SCRIPT: $TESTSUITE_SCRIPT"
     fi
     this_mode_is_set "i" "$m" && i_direct_copy "$pkg" "$V" "$FILES" "$m"
     i_make_binary_symlink "$pkg" "${V}" "$m"

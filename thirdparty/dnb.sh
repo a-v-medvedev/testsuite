@@ -26,7 +26,6 @@ function dnb_sandbox() {
     echo ">> Making sandbox:"
     mkdir -p sandbox
     [ -e sandbox/psubmit.bin ] || ln -s ../psubmit.bin sandbox/
-    cp -va argsparser.bin/*.so sandbox/
     cp -va massivetests.bin/* sandbox/
 	cp -va ${TESTSUITE_PROJECT}.bin/* sandbox/
     cp -v ../${TESTSUITE_PROJECT}.conf/* sandbox/
@@ -65,7 +64,7 @@ function dnb_daemonize() {
 export DNB_NOCUDA=TRUE
 
 PACKAGES="yaml-cpp argsparser massivetests psubmit daemonize $TESTSUITE_PACKAGES"
-VERSIONS="yaml-cpp:0.6.3 argsparser:HEAD massivetests:HEAD^output_rework psubmit:HEAD daemonize:1.7.8 $TESTSUITE_VERSIONS"
+VERSIONS="yaml-cpp:0.7.0 argsparser:0.1.2 massivetests:HEAD^output_rework psubmit:HEAD daemonize:1.7.8 $TESTSUITE_VERSIONS"
 TARGET_DIRS="sandbox"
 
 started=$(date "+%s")
