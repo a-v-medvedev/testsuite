@@ -27,6 +27,9 @@ source thirdparty/dbscripts/base.inc
 source thirdparty/dbscripts/funcs.inc
 source thirdparty/dbscripts/db.inc
 
+##############
+set -x
+
 set +u
 url="$1"
 app="$2"
@@ -57,8 +60,10 @@ hwdir="$basedir/$app/$testmodule/$hwconf"
 
 suite_dir="$hwdir/$suite_name"
 [ ! -d "$suite_dir" ] && fatal "can't find suite_name: $suite_name in config directory. Tried to access directory: $suite_dir."
-[ -e "$app.conf" ] && rm "$app.conf"
-ln -s "$suite_dir" "$app.conf"
+
+ls -l "$app.conf" || true
+[ -e "$app.conf" ] && rm -f "$app.conf"
+ln -s "$suite_dir" "$app.conf" || true
 
 export TESTSUITE_SUITE_NAME="$suite_name"
 TESTSUITE_PACKAGES_EXPR=$(grep 'TESTSUITE_PACKAGES=' thirdparty/_local/conf.inc)
