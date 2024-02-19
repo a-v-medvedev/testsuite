@@ -112,13 +112,13 @@ echo "ENDED_AT: $(date)"
 for suite in ${TESTSUITE_SUITES}; do
     i="sandbox_"$suite
     [ $(getnumfiles "$i") == "1" ] || continue
-    nfailed=X
+    nfailed=0
     [ -f $i/summary/references.txt ] && nfailed=$(wc -l < $i/summary/references.txt)
     echo
     printline 50
     if grep -q ' sec' timing_$suite.log; then
         echo "--- ${suite}: $(cat $i/summary/stats.txt)"
-        echo "--- ${suite}: recorded $nfailed failure references"
+        [ "$nfailed" == 0 ] || echo "--- ${suite}: recorded $nfailed failure references"
         echo "--- ${suite}: processing time: $(cat timing_$suite.log)"
         printline 50
         for j in $i/summary/table.*; do
