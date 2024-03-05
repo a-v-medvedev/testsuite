@@ -8,4 +8,4 @@ function get_timestamp() {
     echo $day.$code
 }
 
-echo "TIMESTAMP: $(get_timestamp)"
+echo "$(get_timestamp)"
