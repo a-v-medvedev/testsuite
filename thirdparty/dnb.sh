@@ -64,7 +64,7 @@ function dnb_daemonize() {
 export DNB_NOCUDA=TRUE
 
 PACKAGES="yaml-cpp argsparser massivetests psubmit daemonize $TESTSUITE_PACKAGES"
-VERSIONS="yaml-cpp:0.7.0 argsparser:0.1.2 massivetests:HEAD^output_rework psubmit:HEAD daemonize:1.7.8 $TESTSUITE_VERSIONS"
+VERSIONS="yaml-cpp:0.7.0 argsparser:0.1.2 massivetests:HEAD psubmit:HEAD daemonize:1.7.8 $TESTSUITE_VERSIONS"
 TARGET_DIRS="sandbox"
 
 started=$(date "+%s")
