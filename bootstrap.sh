@@ -37,7 +37,8 @@ hwconf=${USER}-$(hostname)
 echo "Using configuration: $hwconf"
 echo "Doing git clone for a configuration repository:"
 if [ ! -e "$basedir" ]; then
-    du_gitclone_recursive "confs" "$CONF_URL" "$confbranch" "du"
+    pkg=confs; V="$confbranch"; m="du"; DNB_INSTALL_DIR=$PWD
+    du_gitclone "$CONF_URL"
 fi
 echo "Cloning finished."
 
@@ -64,20 +65,16 @@ if check_if_exists "$hwdir/testall_*.sh"; then
     done
 fi
 
-[ -f "$hwdir"/env.sh ] && ln -s "$hwdir"/env.sh . || fatal "no env.sh file in $hwdir."
+#[ -f "$hwdir"/env.sh ] && ln -s "$hwdir"/env.sh . || fatal "no env.sh file in $hwdir."
 [ -f "$hwdir"/build-psubmit.opt ] && ln -s "$hwdir"/build-psubmit.opt .
 
-suite_dir="$hwdir/$suite_name"
-
-[ -e thirdparty/_local/conf.inc -o -L thirdparty/_local/conf.inc ] && rm -f thirdparty/_local/conf.inc
-if [ -e thirdparty/_local/$app.inc ]; then
-    ln -s $app.inc thirdparty/_local/conf.inc
-    echo "Build script to use: thirdparty/_local/$app.inc"
-else
-    [ -e "$appdir/build.inc" ] || fatal "can't find build script for application: $app. Tried to access file: $appdir/build.inc."
-    ln -s ../../$appdir/build.inc thirdparty/_local/conf.inc
-    echo "Build script to use: $appdir/build.inc"
-fi
+[ -e thirdparty/_local/testapp_build.inc -o -L thirdparty/_local/testapp_build.inc ] && rm -f thirdparty/_local/testapp_build.inc
+[ -e thirdparty/_local/testapp_conf.yaml -o -L thirdparty/_local/testapp_conf.yaml ] && rm -f thirdparty/_local/testapp_conf.yaml
+[ -e "$appdir/testapp_conf.yaml" ] || fatal "can't find dnb yaml config file for application: $app. Tried to access file: $appdir/testapp_conf.yaml."
+[ -e "$appdir/build.inc" ] || fatal "can't find build script for application: $app. Tried to access file: $appdir/build.inc."
+ln -s ../../$appdir/build.inc thirdparty/_local/testapp_build.inc
+ln -s ../../$appdir/testapp_conf.yaml thirdparty/_local/testapp_conf.yaml
+echo "Build script to use: $appdir/build.inc + $appdir/testapp_conf.yaml"
 
 echo "------"
 echo "> Testsuite bootstrap finished, now use testall_*.sh scripts for test action."
