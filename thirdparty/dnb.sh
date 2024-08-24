@@ -9,9 +9,8 @@ source $DNB_DBSCRIPTSDIR/includes.inc
 
 [ -z "$TESTSUITE_MODULE" ] && fatal "TESTSUITE_MODULE must be defined."
 [ -z "$TESTSUITE_PROJECT" ] && fatal "TESTSUITE_PROJECT must be defined."
-[ -z "$TESTSUITE_PACKAGES" ] && fatal "TESTSUITE_PACKAGES must be defined."
-[ -z "$TESTSUITE_VERSIONS" ] && fatal "TESTSUITE_VERSIONS must be defined."
-[ -z "$TESTSUITE_SCRIPT" ] && fatal "TESTSUITE_SCRIPT must be defined."
+
+export TESTSUITE_SCRIPT=functional
 
 source _local/testapp_build.inc
 
@@ -19,8 +18,8 @@ function dnb_massivetests() {
     generic_prolog "massivetests" $* || return 0
     du_github "a-v-medvedev" "v"
     if any_mode_is_set "bi" "$m"; then
-        [ -f "$INSTALL_DIR/yaml-cpp.bin/include/yaml-cpp/yaml.h" ] || fatal "$pkg: installed yaml-cpp is required to build"
-        [ -f "$INSTALL_DIR/argsparser.bin/argsparser.h" ] || fatal "$pkg: installed argsparser is required to build"
+        [ -f "$DNB_INSTALL_DIR/yaml-cpp.bin/include/yaml-cpp/yaml.h" ] || fatal "$pkg: installed yaml-cpp is required to build"
+        [ -f "$DNB_INSTALL_DIR/argsparser.bin/argsparser.h" ] || fatal "$pkg: installed argsparser is required to build"
     fi
     local COMMANDS=""
     local PARAMS="THIRDPARTY=.."
@@ -62,19 +61,7 @@ function dnb_sandbox() {
     cp -va daemonize.bin/sbin/daemonize sandbox/psubmit.bin
     cd sandbox
     generate_psubmit_opt "."
-    #local nps=$(ls -1 psubmit_*.opt.TEMPLATE 2> /dev/null | wc -l)
-    #if [ "$nps" != "0" ]; then
-    #    for i in psubmit_*.opt.TEMPLATE; do
-    #        local sfx=$(echo $i | sed 's/psubmit_//;s/.opt.TEMPLATE//')
-    #        template_to_psubmitopts . "$sfx"
-    #    done
-    #fi
-    #nps=$(ls -1 psubmit.opt.TEMPLATE 2> /dev/null | wc -l)
-    #if [ "$nps" != "0" ]; then
-    #    template_to_psubmitopts . ""
-    #fi
     [ -e thirdparty ] || ln -s .. thirdparty
-    #[ -e env.sh ] || ln -s ../../env.sh env.sh
     cd ..
     echo ">> Sandbox ready"
     return 0

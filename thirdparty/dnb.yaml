@@ -1,0 +1,41 @@
+##PACKAGES="yaml-cpp argsparser massivetests psubmit daemonize $TESTSUITE_PACKAGES"
+##VERSIONS="yaml-cpp:0.7.0 argsparser:0.1.2 massivetests:HEAD psubmit:HEAD daemonize:1.7.8
+---
+packages:
+  - [ yaml-cpp ]
+  - [ argsparser ]
+  - [ massivetests ]
+  - [ psubmit ]
+  - [ daemonize ]
+
+versions:
+  - list:
+      - yaml-cpp:0.7.0
+      - argsparser:HEAD
+      - massivetests:HEAD
+      - psubmit:HEAD
+      - daemonize:1.7.8
+
+target_dirs:
+  - [ yaml-cpp.bin ]
+  - [ argsparser.bin ]
+  - [ massivetests.bin ]
+  - [ daemonize.bin ]
+
+psubmit:
+  job_name: testsuite_job
+
+settings:
+  default_mode: ":ubi"
+
+specific:
+  - _local/testapp_conf.yaml
+  - _local/account.yaml
+  - _local/machine.yaml
+
+preamble:
+  - "echo \"Download and build script for testsuite, for docs please refer: https://github.com/a-v-medvedev/testsuite.\""
+
+script:
+  - dubi_main "$*"
+

@@ -33,15 +33,15 @@ function do_build_and_test() {
 
 
 
-    echo RUN: ./build.sh  "$TESTSUITE_CONF_URL" "$TESTSUITE_PROJECT" "$TESTSUITE_MODULE" "$suite"
+    echo RUN: ./build.sh "$TESTSUITE_PROJECT" "$suite" "$TESTSUITE_MODULE"
     echo ">> ..."
     local t1=$(date +%s)
     if [ -e build-psubmit.opt ]; then
-        psubmit.sh -n1 -o build-psubmit.opt -a "$TESTSUITE_CONF_URL $TESTSUITE_PROJECT $TESTSUITE_MODULE $suite" > build_$suite.log 2>&1
+        psubmit.sh -n1 -o build-psubmit.opt -a "$TESTSUITE_PROJECT $suite $TESTSUITE_MODULE" > build_$suite.log 2>&1
         grep -q "Build is done." build_$suite.log || report "build_failed" || return 1
         ### FIXME: find output >  build_$suite.log
     else
-        ./build.sh  "$TESTSUITE_CONF_URL" "$TESTSUITE_PROJECT" "$TESTSUITE_MODULE" "$suite" > build_$suite.log 2>&1 || report "build_failed" || return 1
+       ./build.sh  "$TESTSUITE_PROJECT" "$suite" "$TESTSUITE_MODULE" > build_$suite.log 2>&1 || report "build_failed" || return 1
     fi
     local t2=$(date +%s)
     echo ">> done in $(expr $t2 - $t1) sec."

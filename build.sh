@@ -1,10 +1,7 @@
 #!/bin/bash
 
 function usage() {
-    echo "Usage: $(basename $0) [-f|-i] <url> <app> [<testmodule>] [<suite_name>]"
-    echo "           url        -- a git repository URL suitable for git clone, with some"
-    echo "                         credentials if required. This git repository must"
-    echo "                         contain config directory with the appropriate files."
+    echo "Usage: $(basename $0) [-f|-i] <app> [<suite_name>] [<testmodule>]"
     echo "           app        -- the target application name to choose actual test configs."
     echo "           testmodule -- (default: 'functest') name of massivetests module to build and use."
     echo "           suite_name     -- (default: 'basic') the suite name to run tests for."
@@ -14,7 +11,7 @@ function usage() {
 
 function check_prereq_exists() {
     pkg="$1"
-    if [ -e thirdparty/${pkg}.bin -a -e thirdparty/${pkg}.src ]; then 
+    if [ -e ${pkg}.bin -a -e ${pkg}.src ]; then 
         return 0; 
     else
         return 1;
@@ -28,18 +25,21 @@ source thirdparty/dbscripts/funcs.inc
 source thirdparty/dbscripts/db.inc
 
 ##############
-set -x
+#set -x
 
 set +u
-url="$1"
-app="$2"
+app="$1"
+suite_name="$2"
 testmodule="$3"
-suite_name="$4"
-[ -z "$testmodule" ] && testmodule="functest" 
 [ -z "$suite_name" ] && suite_name="basic" 
+[ -z "$testmodule" ] && testmodule="functest" 
 set -u
 
-[ -z "$url" -o -z "$app" -o -z "$testmodule" -o -z "$suite_name" ] && usage
+[ -z "$app" -o -z "$testmodule" -o -z "$suite_name" ] && usage
+
+export TESTSUITE_MODULE=$testmodule; 
+export TESTSUITE_PROJECT=$app;
+export TESTSUITE_SUITE_NAME="$suite_name"
 
 hwconf=${USER}-$(hostname)
 set +u
@@ -52,6 +52,7 @@ else
     basedir=$(echo $basedir)
 fi
 
+echo "Locating test configs in: $basedir/$app/$testmodule"
 echo "Using configuration: $hwconf"
 
 appdir="$basedir/$app/$testmodule"
@@ -65,26 +66,30 @@ ls -l "$app.conf" || true
 [ -e "$app.conf" ] && rm -f "$app.conf"
 ln -s "$suite_dir" "$app.conf" || true
 
-export TESTSUITE_SUITE_NAME="$suite_name"
-TESTSUITE_PACKAGES_EXPR=$(grep 'TESTSUITE_PACKAGES=' thirdparty/_local/conf.inc)
-PREREQUISITES=""
-ALL_PREREQ=$(check_prereq_exists "argsparser" && check_prereq_exists "daemonize" && check_prereq_exists "psubmit" && check_prereq_exists "yaml-cpp" && check_prereq_exists "massivetests" && echo OK || true)
-if [ -z "$TESTSUITE_PACKAGES_EXPR" -o "$ALL_PREREQ" != "OK" ]; then
-    rm -rf thirdparty/*-*.src thirdparty/*.bin thirdparty/sandbox
-    cd thirdparty
+
+cd thirdparty
+prereqs_are_built=$(check_prereq_exists "argsparser" && check_prereq_exists "daemonize" && check_prereq_exists "psubmit" && check_prereq_exists "yaml-cpp" && check_prereq_exists "massivetests" && echo OK || true)
+pkgs=$(cat _local/testapp_conf.yaml | awk '/^packages:/ {on=1} on && /^[^p].*:/ {on=0} on {if ($3!="") print $3}' | tr '\n' ' ')
+for i in $pkgs; do
+    [ -d $i.dwn ] || continue
+    [ -L $i.src ] || /dnb.sh $i:u
+    [ -L $i.src ] || fatal "uppack stage for package $i: can't locate $pkg.src"
+    #ls -ld $i.src
+    #ls -l $i.src/
+    [ -f $i.src/dnb-$hwconf.yaml ] && { echo "Machine file found: $i.src/dnb-$hwconf.yaml"; cp $i.src/dnb-$hwconf.yaml _local/machine.yaml; }
+done
+if [ "$prereqs_are_built" != "OK" ]; then
     ./dnb.sh
-    cd ..
 else
-    eval $TESTSUITE_PACKAGES_EXPR
-    for pkg in $TESTSUITE_PACKAGES; do
-        rm -rf thirdparty/${pkg}-*.src
+    for pkg in $pkgs; do
+        rm -rf ${pkg}-*.src
     done
-    rm -rf thirdparty/sandbox
-    cd thirdparty
-    for pkg in $TESTSUITE_PACKAGES; do
-        ./dnb.sh ${pkg}
+    rm -rf sandbox
+    for pkg in $pkgs; do
+        ./dnb.sh ${pkg}:ub
     done
     ./dnb.sh :i
-    cd ..
 fi
+cd ..
+
 echo "Build is done."
