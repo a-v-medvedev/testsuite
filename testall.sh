@@ -49,8 +49,6 @@ function do_build_and_test() {
     cp -r thirdparty/sandbox sandbox_$suite
     cd sandbox_$suite
     [ -f revision ] && echo "REVISION: $(cat revision)"
-    rm env.sh
-    ln -s ../env.sh .
     rm psubmit.bin
     ln -s ../thirdparty/psubmit.bin .
     rm thirdparty

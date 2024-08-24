@@ -12,7 +12,7 @@ source $DNB_DBSCRIPTSDIR/includes.inc
 
 export TESTSUITE_SCRIPT=functional
 
-source _local/testapp_build.inc
+[ -e _local/testapp_build.inc ] && source _local/testapp_build.inc
 
 function dnb_massivetests() {
     generic_prolog "massivetests" $* || return 0

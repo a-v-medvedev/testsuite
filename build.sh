@@ -72,7 +72,7 @@ prereqs_are_built=$(check_prereq_exists "argsparser" && check_prereq_exists "dae
 pkgs=$(cat _local/testapp_conf.yaml | awk '/^packages:/ {on=1} on && /^[^p].*:/ {on=0} on {if ($3!="") print $3}' | tr '\n' ' ')
 for i in $pkgs; do
     [ -d $i.dwn ] || continue
-    [ -L $i.src ] || /dnb.sh $i:u
+    [ -L $i.src ] || ./dnb.sh $i:u
     [ -L $i.src ] || fatal "uppack stage for package $i: can't locate $pkg.src"
     #ls -ld $i.src
     #ls -l $i.src/
