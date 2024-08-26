@@ -17,10 +17,14 @@ versions:
       - daemonize:1.7.8
 
 target_dirs:
-  - [ yaml-cpp.bin ]
-  - [ argsparser.bin ]
-  - [ massivetests.bin ]
-  - [ daemonize.bin ]
+  - [ sandbox ]
+  - [ nemo.bin ]
+
+        #target_dirs:
+        #  - [ yaml-cpp.bin ]
+        #  - [ argsparser.bin ]
+        #  - [ massivetests.bin ]
+        #  - [ daemonize.bin ]
 
 psubmit:
   job_name: testsuite_job
