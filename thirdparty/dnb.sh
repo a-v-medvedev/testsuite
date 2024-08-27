@@ -45,7 +45,7 @@ function dnb_massivetests() {
 function dnb_daemonize() {
     generic_prolog "daemonize" $* || return 0
     du_github "bmc" "release-"
-	bi_autoconf_make "" "" 
+    bi_autoconf_make "" "" 
     generic_epilog
     return 0    
 }
@@ -59,8 +59,8 @@ function dnb_sandbox() {
     cp -v ../${TESTSUITE_PROJECT}.conf/* sandbox/
     rm -f sandbox/psubmit.bin/daemonize
     cp -va daemonize.bin/sbin/daemonize sandbox/psubmit.bin
+    cp -va daemonize.bin/sbin/daemonize sandbox/
     cd sandbox
-    generate_psubmit_opt "."
     [ -e thirdparty ] || ln -s .. thirdparty
     cd ..
     echo ">> Sandbox ready"
