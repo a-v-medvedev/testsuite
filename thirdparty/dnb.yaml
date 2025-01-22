@@ -1,5 +1,3 @@
-##PACKAGES="yaml-cpp argsparser massivetests psubmit daemonize $TESTSUITE_PACKAGES"
-##VERSIONS="yaml-cpp:0.7.0 argsparser:0.1.2 massivetests:HEAD psubmit:HEAD daemonize:1.7.8
 ---
 packages:
   - [ yaml-cpp ]
@@ -19,12 +17,6 @@ versions:
 target_dirs:
   - [ sandbox ]
   - [ nemo.bin ]
-
-        #target_dirs:
-        #  - [ yaml-cpp.bin ]
-        #  - [ argsparser.bin ]
-        #  - [ massivetests.bin ]
-        #  - [ daemonize.bin ]
 
 psubmit:
   job_name: testsuite_job

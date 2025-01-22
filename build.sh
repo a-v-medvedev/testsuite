@@ -1,10 +1,9 @@
 #!/bin/bash
 
 function usage() {
-    echo "Usage: $(basename $0) [-f|-i] <app> [<suite_name>] [<testmodule>]"
+    echo "Usage: $(basename $0) <app> [<suite_name>]"
     echo "           app        -- the target application name to choose actual test configs."
-    echo "           testmodule -- (default: 'functest') name of massivetests module to build and use."
-    echo "           suite_name     -- (default: 'basic') the suite name to run tests for."
+    echo "           suite_name -- (default: 'basic') the suite name to run tests for."
     echo 
     fatal "command line parsing results in no further action."
 }
@@ -30,15 +29,14 @@ source thirdparty/dbscripts/db.inc
 set +u
 app="$1"
 suite_name="$2"
-testmodule="$3"
+testmodule="functest"
 [ -z "$suite_name" ] && suite_name="basic" 
-[ -z "$testmodule" ] && testmodule="functest" 
 set -u
 
 [ -z "$app" -o -z "$testmodule" -o -z "$suite_name" ] && usage
 
-export TESTSUITE_MODULE=$testmodule; 
-export TESTSUITE_PROJECT=$app;
+export TESTSUITE_MODULE=$testmodule 
+export TESTSUITE_PROJECT=$app
 export TESTSUITE_SUITE_NAME="$suite_name"
 
 hwconf=${USER}-$(hostname)
@@ -68,14 +66,16 @@ ln -s "$suite_dir" "$app.conf" || true
 
 
 cd thirdparty
-prereqs_are_built=$(check_prereq_exists "argsparser" && check_prereq_exists "daemonize" && check_prereq_exists "psubmit" && check_prereq_exists "yaml-cpp" && check_prereq_exists "massivetests" && echo OK || true)
+prereqs=argsparser daemonize psubmit yaml-cpp massivetests
+prereqs_are_built=OK
+for i in $prereqs; do
+    check_prereq_exists "$i" || prereqs_are_built="" && true
+done
 pkgs=$(cat _local/testapp_conf.yaml | awk '/^packages:/ {on=1} on && /^[^p].*:/ {on=0} on {if ($3!="") print $3}' | tr '\n' ' ')
-for i in $pkgs; do
+for i in $pkgs $prereqs; do
     [ -d $i.dwn ] || continue
     [ -L $i.src ] || ./dnb.sh $i:u
-    [ -L $i.src ] || fatal "uppack stage for package $i: can't locate $pkg.src"
-    #ls -ld $i.src
-    #ls -l $i.src/
+    [ -L $i.src ] || fatal "uppack stage for package $i: can't locate $i.src"
     [ -f $i.src/dnb-$hwconf.yaml ] && { echo "Machine file found: $i.src/dnb-$hwconf.yaml"; cp $i.src/dnb-$hwconf.yaml _local/machine.yaml; }
 done
 if [ "$prereqs_are_built" != "OK" ]; then
