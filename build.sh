@@ -66,7 +66,7 @@ ln -s "$suite_dir" "$app.conf" || true
 
 
 cd thirdparty
-prereqs=argsparser daemonize psubmit yaml-cpp massivetests
+prereqs="argsparser daemonize psubmit yaml-cpp massivetests"
 prereqs_are_built=OK
 for i in $prereqs; do
     check_prereq_exists "$i" || prereqs_are_built="" && true
