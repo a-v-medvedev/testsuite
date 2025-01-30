@@ -7,7 +7,6 @@ DNB_YAML_CONFIG="dnb.yaml"
 
 source $DNB_DBSCRIPTSDIR/includes.inc
 
-[ -z "$TESTSUITE_MODULE" ] && fatal "TESTSUITE_MODULE must be defined."
 [ -z "$TESTSUITE_PROJECT" ] && fatal "TESTSUITE_PROJECT must be defined."
 
 export TESTSUITE_SCRIPT=functional
@@ -23,7 +22,7 @@ function dnb_massivetests() {
     fi
     local COMMANDS=""
     local PARAMS="THIRDPARTY=.."
-    PARAMS="$PARAMS MODULE=$TESTSUITE_MODULE"
+    PARAMS="$PARAMS MODULE=functest"
     set +u
     local cxxdef=""
     [ -z "$MASSIVETESTS_CXX" ] || cxxdef="CXX=$MASSIVETESTS_CXX"

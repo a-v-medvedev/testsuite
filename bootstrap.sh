@@ -11,8 +11,9 @@ source thirdparty/dbscripts/db.inc
 
 CONF_URL="$1"
 app="$2"
-testmodule="$3"
-confbranch=${4:-HEAD}
+confbranch=${3:-HEAD}
+
+testmodule="functest"
 
 if [ "$CONF_URL" == "clean" ]; then
     rm -rf confs-*.src

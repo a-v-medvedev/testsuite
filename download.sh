@@ -1,5 +1,5 @@
 #!/bin/bash
 
 cd thirdparty
-./dnb.sh :d
+DNB_OMIT_CHECKS=TRUE ./dnb.sh :d
 

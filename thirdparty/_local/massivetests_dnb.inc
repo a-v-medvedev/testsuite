@@ -12,7 +12,7 @@ function dnb_massivetests() {
     fi
     local COMMANDS=""
     local PARAMS="THIRDPARTY=.."
-    PARAMS="$PARAMS MODULE=$TESTSUITE_MODULE"
+    PARAMS="$PARAMS MODULE=functest"
     set +u    
     local cxxdef=""
     [ -z "$MASSIVETESTS_CXX" ] || cxxdef="CXX=$MASSIVETESTS_CXX"

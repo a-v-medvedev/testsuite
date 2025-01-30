@@ -35,7 +35,6 @@ set -u
 
 [ -z "$app" -o -z "$testmodule" -o -z "$suite_name" ] && usage
 
-export TESTSUITE_MODULE=$testmodule 
 export TESTSUITE_PROJECT=$app
 export TESTSUITE_SUITE_NAME="$suite_name"
 
