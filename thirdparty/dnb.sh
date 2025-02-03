@@ -61,6 +61,7 @@ function dnb_sandbox() {
     cp -va daemonize.bin/sbin/daemonize sandbox/
     cd sandbox
     [ -e thirdparty ] || ln -s .. thirdparty
+    generate_psubmit_opt "."
     cd ..
     echo ">> Sandbox ready"
     return 0

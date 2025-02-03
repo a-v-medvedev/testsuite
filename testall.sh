@@ -30,9 +30,6 @@ function report() {
 
 function do_build_and_test() {
     local suite="$1"
-
-
-
     echo RUN: ./build.sh "$TESTSUITE_PROJECT" "$suite" 
     echo ">> ..."
     local t1=$(date +%s)
@@ -41,7 +38,7 @@ function do_build_and_test() {
         grep -q "Build is done." build_$suite.log || report "build_failed" || return 1
         ### FIXME: find output >  build_$suite.log
     else
-       ./build.sh  "$TESTSUITE_PROJECT" "$suite" > build_$suite.log 2>&1 || report "build_failed" || return 1
+       bash -x ./build.sh "$TESTSUITE_PROJECT" "$suite" > build_$suite.log 2>&1 || report "build_failed" || return 1
     fi
     local t2=$(date +%s)
     echo ">> done in $(expr $t2 - $t1) sec."
@@ -56,7 +53,7 @@ function do_build_and_test() {
     echo RUN: ./functional_massive_tests.sh in sandbox_$suite directory
     echo ">> ..."
     local t3=$(date +%s)
-    ./functional_massive_tests.sh > test_routine_$suite.log 2>&1 || report "test_routine_failed" || { cd ..; return 1; }
+    ./functional_massive_tests.sh > test_routine_$suite.log 2>&1 || report "test_routine_failed" || { mv test_routine_$suite.log ..; cd ..; return 1; }
     local t4=$(date +%s)
     cd ..
     echo ">> done in $(expr $t4 - $t3) sec."
@@ -68,7 +65,6 @@ echo "APPLICATION: $TESTSUITE_PROJECT"
 echo "BRANCH: $TESTSUITE_BRANCH"
 echo "BUILD_CONF: $TESTSUITE_BUILD_CONF"
 echo "TESTDRIVER: functest"
-echo "SCRIPT: $TESTSUITE_SCRIPT"
 echo "CONF_URL: $TESTSUITE_CONF_URL"
 echo "STARTED_AT: $(date)"
 
@@ -77,7 +73,6 @@ timestamp="$TESTSUITE_TIMESTAMP"
 export TESTSUITE_TIMESTAMP="$timestamp"
 echo "TIMESTAMP: $timestamp"
 
-#rm -rf thirdparty/argsparser.bin thirdparty/daemonize.bin thirdparty/psubmit.bin thirdparty/yaml-cpp.bin thirdparty/massivetests.bin
 for suite in ${TESTSUITE_SUITES}; do
     echo "SUITE_START: $suite"
     do_build_and_test $suite

@@ -77,7 +77,7 @@ for i in $pkgs $prereqs; do
     [ -L $i.src ] || fatal "unpack stage for package $i: can't locate $i.src"
     [ -f $i.src/dnb-$hwconf.yaml ] && { echo "Machine file found: $i.src/dnb-$hwconf.yaml"; cp $i.src/dnb-$hwconf.yaml _local/machine.yaml; }
 done
-if [ ! -r _local/machine.yaml ]; then
+if [ ! -e _local/machine.yaml ]; then
     dnb=../$hwdir/dnb-$hwconf.yaml
     [ -e "$dnb" ] || fatal "dnb-$hwconf.yaml is expected to present in the configuration directory"
     echo "Machine file found: $hwdir/dnb-$hwconf.yaml"
