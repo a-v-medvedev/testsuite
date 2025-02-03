@@ -74,9 +74,15 @@ pkgs=$(cat _local/testapp_conf.yaml | awk '/^packages:/ {on=1} on && /^[^p].*:/ 
 for i in $pkgs $prereqs; do
     [ -d $i.dwn ] || continue
     [ -L $i.src ] || ./dnb.sh $i:u
-    [ -L $i.src ] || fatal "uppack stage for package $i: can't locate $i.src"
+    [ -L $i.src ] || fatal "unpack stage for package $i: can't locate $i.src"
     [ -f $i.src/dnb-$hwconf.yaml ] && { echo "Machine file found: $i.src/dnb-$hwconf.yaml"; cp $i.src/dnb-$hwconf.yaml _local/machine.yaml; }
 done
+if [ ! -r _local/machine.yaml ]; then
+    dnb=../$hwdir/dnb-$hwconf.yaml
+    [ -e "$dnb" ] || fatal "dnb-$hwconf.yaml is expected to present in the configuration directory"
+    echo "Machine file found: $hwdir/dnb-$hwconf.yaml"
+    cp "$dnb" _local/machine.yaml
+fi
 if [ "$prereqs_are_built" != "OK" ]; then
     ./dnb.sh
 else
