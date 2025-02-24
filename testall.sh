@@ -31,8 +31,6 @@ function report() {
 function do_build_and_test() {
     local suite="$1"
 
-
-
     echo RUN: ./build.sh "$TESTSUITE_PROJECT" "$suite" 
     echo ">> ..."
     local t1=$(date +%s)
@@ -56,13 +54,21 @@ function do_build_and_test() {
     echo RUN: ./functional_massive_tests.sh in sandbox_$suite directory
     echo ">> ..."
     local t3=$(date +%s)
-    ./functional_massive_tests.sh > test_routine_$suite.log 2>&1 || report "test_routine_failed" || { cd ..; return 1; }
+    ./functional_massive_tests.sh > ../test_routine_$suite.log 2>&1 || report "test_routine_failed" || { cd ..; return 1; }
     local t4=$(date +%s)
     cd ..
     echo ">> done in $(expr $t4 - $t3) sec."
     report "$(expr $t2 - $t1) sec / $(expr $t4 - $t3) sec"  
     return 0
 }
+
+if [ ! -v TESTSUITE_CONF_URL ]; then
+    if [ -e "${TESTSUITE_PROJECT}.conf" ]; then
+        url=""
+        cd "${TESTSUITE_PROJECT}.conf" && url=$(git remote -v | grep ' (fetch)' | awk '{print $2}') && cd ..
+        [ -z "$url" ] || export TESTSUITE_CONF_URL="$url"
+    fi
+fi
 
 echo "APPLICATION: $TESTSUITE_PROJECT"
 echo "BRANCH: $TESTSUITE_BRANCH"
@@ -77,7 +83,6 @@ timestamp="$TESTSUITE_TIMESTAMP"
 export TESTSUITE_TIMESTAMP="$timestamp"
 echo "TIMESTAMP: $timestamp"
 
-#rm -rf thirdparty/argsparser.bin thirdparty/daemonize.bin thirdparty/psubmit.bin thirdparty/yaml-cpp.bin thirdparty/massivetests.bin
 for suite in ${TESTSUITE_SUITES}; do
     echo "SUITE_START: $suite"
     do_build_and_test $suite
