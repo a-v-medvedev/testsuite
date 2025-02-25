@@ -62,6 +62,8 @@ function do_build_and_test() {
     return 0
 }
 
+[ -e application.conf/env.inc ] && source application.conf/env.inc
+
 if [ ! -v TESTSUITE_CONF_URL ]; then
     if [ -e "${TESTSUITE_PROJECT}.conf" ]; then
         url=""
@@ -70,11 +72,13 @@ if [ ! -v TESTSUITE_CONF_URL ]; then
     fi
 fi
 
+TESTSUITE_BRANCH=${1:-${TESTSUITE_DEFAULT_BRANCH}}
+TESTSUITE_SUITES=${2:-${TESTSUITE_SUITES}}
+
 echo "APPLICATION: $TESTSUITE_PROJECT"
 echo "BRANCH: $TESTSUITE_BRANCH"
 echo "BUILD_CONF: $TESTSUITE_BUILD_CONF"
 echo "TESTDRIVER: functest"
-echo "SCRIPT: $TESTSUITE_SCRIPT"
 echo "CONF_URL: $TESTSUITE_CONF_URL"
 echo "STARTED_AT: $(date)"
 

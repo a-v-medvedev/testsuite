@@ -59,9 +59,8 @@ hwdir="$basedir/$app/$testmodule/$hwconf"
 suite_dir="$hwdir/$suite_name"
 [ ! -d "$suite_dir" ] && fatal "can't find suite_name: $suite_name in config directory. Tried to access directory: $suite_dir."
 
-ls -l "$app.conf" || true
-[ -e "$app.conf" ] && rm -f "$app.conf"
-ln -s "$suite_dir" "$app.conf" || true
+[ -e "suite.conf" ] && rm -f "suite.conf"
+ln -s "$suite_dir" "suite.conf" || true
 
 
 cd thirdparty
@@ -74,7 +73,7 @@ pkgs=$(cat _local/testapp_conf.yaml | awk '/^packages:/ {on=1} on && /^[^p].*:/ 
 for i in $pkgs $prereqs; do
     [ -d $i.dwn ] || continue
     [ -L $i.src ] || ./dnb.sh $i:u
-    [ -L $i.src ] || fatal "uppack stage for package $i: can't locate $i.src"
+    [ -L $i.src ] || fatal "unpack stage for package $i: can't locate $i.src"
     [ -f $i.src/dnb-$hwconf.yaml ] && { echo "Machine file found: $i.src/dnb-$hwconf.yaml"; cp $i.src/dnb-$hwconf.yaml _local/machine.yaml; }
 done
 if [ "$prereqs_are_built" != "OK" ]; then

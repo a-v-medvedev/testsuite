@@ -55,7 +55,7 @@ function dnb_sandbox() {
     [ -e sandbox/psubmit.bin ] || ln -s ../psubmit.bin sandbox/
     cp -va massivetests.bin/* sandbox/
 	cp -va ${TESTSUITE_PROJECT}.bin/* sandbox/
-    cp -v ../${TESTSUITE_PROJECT}.conf/* sandbox/
+    cp -v ../suite.conf/* sandbox/
     rm -f sandbox/psubmit.bin/daemonize
     cp -va daemonize.bin/sbin/daemonize sandbox/psubmit.bin
     cp -va daemonize.bin/sbin/daemonize sandbox/

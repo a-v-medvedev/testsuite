@@ -47,6 +47,9 @@ appdir="$basedir/$app/$testmodule"
 hwdir="$basedir/$app/$testmodule/$hwconf"
 [ ! -d "$hwdir" ] && fatal "can't find configuration: $hwconf in config directory. Tried to access directory: $hwdir."
 
+[ -e "application.conf" ] && rm -rf application.conf
+ln -s $hwdir application.conf
+
 if check_if_exists "$appdir/testall_*.sh"; then
     for i in $appdir/testall_*.sh; do
         lnk=$(basename "$i")
@@ -56,8 +59,8 @@ if check_if_exists "$appdir/testall_*.sh"; then
     done
 fi
 
-if check_if_exists "$hwdir/testall_*.sh"; then
-    for i in $appdir/testall_*.sh; do
+if check_if_exists "application.conf/testall_*.sh"; then
+    for i in application.conf/testall_*.sh; do
         lnk=$(basename "$i")
         [ -e "$lnk" -o -L "$lnk" ] && echo "NOTE: symlink $lnk will be overwritten."
         rm -f "$lnk"
@@ -66,8 +69,7 @@ if check_if_exists "$hwdir/testall_*.sh"; then
     done
 fi
 
-#[ -f "$hwdir"/env.sh ] && ln -s "$hwdir"/env.sh . || fatal "no env.sh file in $hwdir."
-[ -f "$hwdir"/build-psubmit.opt ] && ln -s "$hwdir"/build-psubmit.opt .
+[ -f application.conf/build-psubmit.opt ] && ln -s application.conf/build-psubmit.opt .
 
 [ -e thirdparty/_local/testapp_build.inc -o -L thirdparty/_local/testapp_build.inc ] && rm -f thirdparty/_local/testapp_build.inc
 [ -e thirdparty/_local/testapp_conf.yaml -o -L thirdparty/_local/testapp_conf.yaml ] && rm -f thirdparty/_local/testapp_conf.yaml
