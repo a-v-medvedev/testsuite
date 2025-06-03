@@ -2,14 +2,7 @@
 
 set -eu
 
-DNB_DBSCRIPTSDIR=./dbscripts
-DNB_YAML_CONFIG="dnb.yaml"
-
-source $DNB_DBSCRIPTSDIR/includes.inc
-
 [ -z "$TESTSUITE_PROJECT" ] && fatal "TESTSUITE_PROJECT must be defined."
-
-export TESTSUITE_SCRIPT=functional
 
 [ -e _local/testapp_build.inc ] && source _local/testapp_build.inc
 
@@ -31,12 +24,8 @@ function dnb_massivetests() {
     b_make "$COMMANDS" "$PARAMS clean"
     b_make "$COMMANDS" "$PARAMS"
     local FILES="massivetest scripts/massive_tests.inc"
-    if [ "$TESTSUITE_SCRIPT" == "functional" ]; then
-        local C="scripts/functional"
-        FILES="$FILES $C/clean.sh $C/extract.sh $C/functional_massive_tests.sh $C/make_table.sh $C/script-postproc.sh"
-    else
-        fatal "building massivetests: unsupported value of TESTSUITE_SCRIPT: $TESTSUITE_SCRIPT"
-    fi
+    local C="scripts/functional"
+    FILES="$FILES $C/clean.sh $C/extract.sh $C/functional_massive_tests.sh $C/make_table.sh $C/script-postproc.sh"
     this_mode_is_set "i" && i_direct_copy "$FILES"
     generic_epilog
 }
@@ -66,6 +55,12 @@ function dnb_sandbox() {
     return 0
 }
 
+#----
+
+DNB_DBSCRIPTSDIR=./dbscripts
+DNB_YAML_CONFIG="dnb.yaml"
+
+source $DNB_DBSCRIPTSDIR/includes.inc
 source "$DNB_DBSCRIPTSDIR/yaml-config.inc"
 
 
