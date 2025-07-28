@@ -76,6 +76,10 @@ for i in $pkgs $prereqs; do
     [ -L $i.src ] || fatal "unpack stage for package $i: can't locate $i.src"
     [ -f $i.src/dnb-$hwconf.yaml ] && { echo "Machine file found: $i.src/dnb-$hwconf.yaml"; cp $i.src/dnb-$hwconf.yaml _local/machine.yaml; }
 done
+if [ ! -e _local/machine.yaml ]; then
+    [ -e ../application.conf/dnb-$hwconf.yaml ] && { echo "Machine file found: application.conf/dnb-$hwconf.yaml"; cp ../application.conf/dnb-$hwconf.yaml _local/machine.yaml; }
+fi
+
 if [ "$prereqs_are_built" != "OK" ]; then
     ./dnb.sh
 else
