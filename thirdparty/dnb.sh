@@ -43,7 +43,7 @@ function dnb_sandbox() {
     mkdir -p sandbox
     [ -e sandbox/psubmit.bin ] || ln -s ../psubmit.bin sandbox/
     cp -va massivetests.bin/* sandbox/
-	cp -va ${TESTSUITE_PROJECT}.bin/* sandbox/
+	cp -vaL ${TESTSUITE_PROJECT}.bin/* sandbox/
     cp -v ../suite.conf/* sandbox/
     rm -f sandbox/psubmit.bin/daemonize
     cp -va daemonize.bin/sbin/daemonize sandbox/psubmit.bin
