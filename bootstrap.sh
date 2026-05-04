@@ -17,7 +17,7 @@ testmodule="functest"
 
 if [ "$CONF_URL" == "clean" ]; then
     rm -rf confs-*.src
-    rm -rf thirdparty/*.dwn thirdparty/*.bin thirdparty/*.src thirdparty/*-* thirdparty/_local/conf.inc thirdparty/sandbox build-psubmit.opt env.sh
+    rm -rf thirdparty/*.dwn thirdparty/*.bin thirdparty/*.src thirdparty/*-* thirdparty/_local/conf.inc thirdparty/sandbox env.sh
     exit 0
 fi
 
@@ -29,7 +29,6 @@ check_if_exists thirdparty/*.bin && fatal 'thirdparty is not clear, cannot boots
 check_if_exists thirdparty/*.src && fatal 'thirdparty is not clear, cannot bootstrap (thirdparty/*.src).'
 check_if_exists thirdparty/*-* && fatal 'thirdparty is not clear, cannot bootstrap (thirdparty/*-*).'
 check_if_exists thirdparty/_local/conf.inc && fatal 'thirdparty is not clear, cannot bootstrap (thirdparty/_local/conf.inc).'
-check_if_exists build-psubmit.opt && rm -f build-psubmit.opt
 check_if_exists env.sh && rm -f env.sh
 
 hwconf=${USER}-$(hostname)
@@ -68,8 +67,6 @@ if check_if_exists "application.conf/testall_*.sh"; then
         echo "Made symlink: $lnk (to: $i)"
     done
 fi
-
-[ -f application.conf/build-psubmit.opt ] && ln -s application.conf/build-psubmit.opt .
 
 [ -e thirdparty/_local/testapp_build.inc -o -L thirdparty/_local/testapp_build.inc ] && rm -f thirdparty/_local/testapp_build.inc
 [ -e thirdparty/_local/testapp_conf.yaml -o -L thirdparty/_local/testapp_conf.yaml ] && rm -f thirdparty/_local/testapp_conf.yaml
