@@ -34,10 +34,11 @@ function do_build_and_test() {
     echo RUN: ./build.sh "$TESTSUITE_PROJECT" "$suite" 
     echo ">> ..."
     local t1=$(date +%s)
-    if [ -e build-psubmit.opt ]; then
-        psubmit.sh -n1 -o build-psubmit.opt -a "$TESTSUITE_PROJECT $suite" > build_$suite.log 2>&1
+    if [ -e application.conf/$suite/build-psubmit.opt ]; then
+        psubmit.sh -n1 -o application.conf/$suite/build-psubmit.opt -a "$TESTSUITE_PROJECT $suite" > build_$suite.log 2>&1
+        local true_log=$(grep '^Rank 0 output:' build_$suite.log | awk '{print $4}')
+        [ -z "$true_log" ] || cat "$true_log" > build_$suite.log
         grep -q "Build is done." build_$suite.log || report "build_failed" || return 1
-        ### FIXME: find output >  build_$suite.log
     else
        ./build.sh  "$TESTSUITE_PROJECT" "$suite" > build_$suite.log 2>&1 || report "build_failed" || return 1
     fi
@@ -61,8 +62,6 @@ function do_build_and_test() {
     report "$(expr $t2 - $t1) sec / $(expr $t4 - $t3) sec"  
     return 0
 }
-
-[ -e application.conf/env.inc ] && source application.conf/env.inc
 
 if [ ! -v TESTSUITE_CONF_URL ]; then
     if [ -e "${TESTSUITE_PROJECT}.conf" ]; then
