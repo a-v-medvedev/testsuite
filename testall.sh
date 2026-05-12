@@ -85,6 +85,7 @@ timestamp="$TESTSUITE_TIMESTAMP"
 [ -z "$timestamp" ] && timestamp=$(./get_timestamp.sh)
 export TESTSUITE_TIMESTAMP="$timestamp"
 echo "TIMESTAMP: $timestamp"
+stop_operation=""
 
 for suite in ${TESTSUITE_SUITES}; do
     echo "SUITE_START: $suite"
@@ -106,11 +107,20 @@ for suite in ${TESTSUITE_SUITES}; do
         SUMMARY=summary_${suite}_$(cat timing_$suite.log)_failure_${timestamp}.tar.gz
         tar czf "$SUMMARY" log_$suite.log
         mkdir -p sandbox_${suite}
+        if [ -v TESTSUITE_REQUIRED_SUITES ]; then
+            for i in $TESTSUITE_REQUIRED_SUITES; do
+                [ "$i" == "$suite" ] && stop_operation=1
+            done 
+        fi
     else
         echo "$RESULT" > timing_$suite.log
         echo "STATUS: ${suite}: actions complete."
     fi
     echo "SUITE_END: $suite"
+    if [ ! -z "$stop_operation" ]; then
+        echo ">> NOTE: we interrupt operation because this suite belongs to the list of required ones."
+        break
+    fi
 done
 
 echo "ENDED_AT: $(date)"
