@@ -1,5 +1,7 @@
 #!/bin/bash
 
+[ -e testapp_defaults.inc ] && source testapp_defaults.inc
+
 function usage() {
     echo "Usage: $(basename $0) <app> [<suite_name>]"
     echo "           app        -- the target application name to choose actual test configs."

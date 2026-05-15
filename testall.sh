@@ -1,5 +1,7 @@
 #!/bin/bash
 
+[ -e testapp_defaults.inc ] && source testapp_defaults.inc
+
 source thirdparty/dbscripts/base.inc
 
 RESULT=""
