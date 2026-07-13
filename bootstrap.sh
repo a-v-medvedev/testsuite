@@ -1,8 +1,13 @@
 #!/bin/bash
 
 function check_if_exists() {
-	N=$(ls -1 $1 2>/dev/null | wc -l)
-	[ "$N" != 0 ]
+    local mask=""
+    local result=1
+    for mask in $*; do
+        local N=$(ls -1 $mask 2>/dev/null | wc -l)
+	    [ "$N" != 0 ] && result=0
+    done
+    return $result
 }
 
 source thirdparty/dbscripts/base.inc
@@ -49,17 +54,9 @@ hwdir="$basedir/$app/$testmodule/$hwconf"
 [ -e "application.conf" ] && rm -rf application.conf
 ln -s $hwdir application.conf
 
-if check_if_exists "$appdir/testall_*.sh"; then
-    for i in $appdir/testall_*.sh; do
-        lnk=$(basename "$i")
-        rm -f "$lnk"
-        ln -s "$i" "$lnk"
-        echo "Made symlink: $lnk (to: $i)"
-    done
-fi
-
-if check_if_exists "application.conf/testall_*.sh"; then
-    for i in application.conf/testall_*.sh; do
+if check_if_exists "application.conf/testall_*.sh" "application.conf/testapp_defaults.inc"; then
+    for i in application.conf/testall_*.sh application.conf/testapp_defaults.inc; do
+        [ -e "$i" ] || continue
         lnk=$(basename "$i")
         [ -e "$lnk" -o -L "$lnk" ] && echo "NOTE: symlink $lnk will be overwritten."
         rm -f "$lnk"
