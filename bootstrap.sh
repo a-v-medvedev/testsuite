@@ -21,8 +21,17 @@ confbranch=${3:-HEAD}
 testmodule="functest"
 
 if [ "$CONF_URL" == "clean" ]; then
+    if check_if_exists confs-*.src; then
+      N=$(ls -1 confs-*.src 2>/dev/null | wc -l)
+      if [ "$N" == 1 ]; then
+          cd confs-*.src
+	  uncommitted_changes=$(git diff --quiet && git diff --cached --quiet && echo clean || echo dirty)
+	  [ "$uncommitted_changes" == "dirty" ] && fatal "the directory " confs-*.src "contains uncommitted changes, clean it manually."
+      fi
+    fi
     rm -rf confs-*.src
     rm -rf thirdparty/*.dwn thirdparty/*.bin thirdparty/*.src thirdparty/*-* thirdparty/_local/conf.inc thirdparty/sandbox env.sh
+    for i in application.conf confs.src testapp_defaults.inc suite.conf; do [ -L $i ] && rm $i; done
     exit 0
 fi
 
@@ -33,7 +42,8 @@ check_if_exists thirdparty/*.dwn && fatal 'thirdparty is not clear, cannot boots
 check_if_exists thirdparty/*.bin && fatal 'thirdparty is not clear, cannot bootstrap (thirdparty/*.bin).'
 check_if_exists thirdparty/*.src && fatal 'thirdparty is not clear, cannot bootstrap (thirdparty/*.src).'
 check_if_exists thirdparty/*-* && fatal 'thirdparty is not clear, cannot bootstrap (thirdparty/*-*).'
-check_if_exists thirdparty/_local/conf.inc && fatal 'thirdparty is not clear, cannot bootstrap (thirdparty/_local/conf.inc).'
+check_if_exists thirdparty/_local/testapp_build.inc && fatal 'thirdparty is not clear, cannot bootstrap (thirdparty/_local/testapp_build.inc).'
+check_if_exists thirdparty/_local/testapp_conf.inc && fatal 'thirdparty is not clear, cannot bootstrap (thirdparty/_local/testapp_conf.inc).'
 check_if_exists env.sh && rm -f env.sh
 
 hwconf=${USER}-$(hostname)
@@ -74,7 +84,7 @@ ln -s ../../$appdir/testapp_conf.yaml thirdparty/_local/testapp_conf.yaml
 echo "Build script to use: $appdir/build.inc + $appdir/testapp_conf.yaml"
 
 echo "------"
-echo "> Testsuite bootstrap finished, now use testall_*.sh scripts for test action."
+echo "> Testsuite bootstrap finished, now use testall.sh or testall_*.sh scripts for test action."
 echo "> NOTE: Directory $basedir/ is a working git clone of configuration repository."
 echo "> Use it to save your work."
 
