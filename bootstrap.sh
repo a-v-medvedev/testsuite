@@ -26,11 +26,14 @@ if [ "$CONF_URL" == "clean" ]; then
       if [ "$N" == 1 ]; then
           cd confs-*.src
 	  uncommitted_changes=$(git diff --quiet && git diff --cached --quiet && echo clean || echo dirty)
-	  [ "$uncommitted_changes" == "dirty" ] && fatal "the directory " confs-*.src "contains uncommitted changes, clean it manually."
+	  cd ..
+	  [ "$uncommitted_changes" == "dirty" ] && fatal "the directory $(ls -1d confs-*.src) contains uncommitted changes, clean it manually."
       fi
     fi
     rm -rf confs-*.src
-    rm -rf thirdparty/*.dwn thirdparty/*.bin thirdparty/*.src thirdparty/*-* thirdparty/_local/conf.inc thirdparty/sandbox env.sh
+    rm -rf env.sh
+    rm -rf thirdparty/*.dwn thirdparty/*.bin thirdparty/*.src thirdparty/*-* thirdparty/sandbox
+    rm -rf thirdparty/_local/testapp_build.inc  thirdparty/_local/testapp_conf.yaml
     for i in application.conf confs.src testapp_defaults.inc suite.conf; do [ -L $i ] && rm $i; done
     exit 0
 fi
