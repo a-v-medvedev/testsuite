@@ -59,10 +59,10 @@ function do_build_and_test() {
     echo ">> ..."
     local t3=$(date +%s)
     local VBBSID=""
-    if [ -e application.conf/$suite/vbbs-psubmit.opt -a -z "$MASSIVE_TESTS_OMIT_EXECUTION" ]; then
+    if [ -e ../application.conf/$suite/vbbs-psubmit.opt -a -z "$MASSIVE_TESTS_OMIT_EXECUTION" ]; then
 	[ -x "$(command -v vbbs 2>/dev/null)" ] || { echo "FATAL: can't find vbbs executable"; report "test_routine_failed" || { cd ..; return 1; }; }
 	[ -x "$(command -v vbbs_sleep.sh 2>/dev/null)" ] || { echo "FATAL: can't find vbbs_sleep.sh executable"; report "test_routine_failed" || { cd ..; return 1; }; }
-        psubmit.sh -e vbbs_sleep.sh -o application.conf/$suite/vbbs-psubmit.opt > vbbs_$suite.log 2>&1 &
+        psubmit.sh -e vbbs_sleep.sh -o ../application.conf/$suite/vbbs-psubmit.opt > vbbs_$suite.log 2>&1 &
         while [ "$VBBSID" == 0 -o "$VBBSID" == "" ]; do
             VBBSID=$(vbbs slurm_show_id | grep SLURM_JOBID: | awk '{print $2}')
         done
