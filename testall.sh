@@ -69,7 +69,7 @@ function do_build_and_test() {
 	echo ">> note: using vbbs, pre-allocated slurm job: $VBBSID"    
     fi
     ./functional_massive_tests.sh > ../test_routine_$suite.log 2>&1 || report "test_routine_failed" || { cd ..; return 1; }
-    [ -z "$VBBSID" ] || { kill %1; vbbs init; }
+    [ -z "$VBBSID" ] || { kill -s 2 %1; vbbs init; }
     local t4=$(date +%s)
     cd ..
     echo ">> done in $(expr $t4 - $t3) sec."
