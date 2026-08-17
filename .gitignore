@@ -1,32 +1,13 @@
-# Prerequisites
-*.d
+application.conf
+build.log
+confs-HEAD.src/
+confs.src
+suite.conf
+testapp_defaults.inc
+timing_*.log
+log_*.log
+test_routine_*.log
+sandbox_*/
+build_*.log
+thirdparty/*
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app

@@ -4,7 +4,7 @@ set -eu
 
 [ -z "$TESTSUITE_PROJECT" ] && fatal "TESTSUITE_PROJECT must be defined."
 
-[ -e _local/testapp_build.inc ] && source _local/testapp_build.inc
+[ -e _local/testapp_build.sh ] && source _local/testapp_build.sh
 
 function dnb_massivetests() {
     generic_prolog "massivetests" $* || return 0

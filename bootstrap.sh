@@ -33,7 +33,7 @@ if [ "$CONF_URL" == "clean" ]; then
     rm -rf confs-*.src
     rm -rf env.sh
     rm -rf thirdparty/*.dwn thirdparty/*.bin thirdparty/*.src thirdparty/*-* thirdparty/sandbox
-    rm -rf thirdparty/_local/testapp_build.inc  thirdparty/_local/testapp_conf.yaml
+    rm -rf thirdparty/_local/testapp_build.sh  thirdparty/_local/testapp_conf.yaml
     for i in application.conf confs.src testapp_defaults.inc suite.conf; do [ -L $i ] && rm $i; done
     exit 0
 fi
@@ -45,7 +45,7 @@ check_if_exists thirdparty/*.dwn && fatal 'thirdparty is not clear, cannot boots
 check_if_exists thirdparty/*.bin && fatal 'thirdparty is not clear, cannot bootstrap (thirdparty/*.bin).'
 check_if_exists thirdparty/*.src && fatal 'thirdparty is not clear, cannot bootstrap (thirdparty/*.src).'
 check_if_exists thirdparty/*-* && fatal 'thirdparty is not clear, cannot bootstrap (thirdparty/*-*).'
-check_if_exists thirdparty/_local/testapp_build.inc && fatal 'thirdparty is not clear, cannot bootstrap (thirdparty/_local/testapp_build.inc).'
+check_if_exists thirdparty/_local/testapp_build.sh && fatal 'thirdparty is not clear, cannot bootstrap (thirdparty/_local/testapp_build.sh).'
 check_if_exists thirdparty/_local/testapp_conf.inc && fatal 'thirdparty is not clear, cannot bootstrap (thirdparty/_local/testapp_conf.inc).'
 check_if_exists env.sh && rm -f env.sh
 
@@ -78,13 +78,13 @@ if check_if_exists "application.conf/testall_*.sh" "application.conf/testapp_def
     done
 fi
 
-[ -e thirdparty/_local/testapp_build.inc -o -L thirdparty/_local/testapp_build.inc ] && rm -f thirdparty/_local/testapp_build.inc
+[ -e thirdparty/_local/testapp_build.sh -o -L thirdparty/_local/testapp_build.sh ] && rm -f thirdparty/_local/testapp_build.sh
 [ -e thirdparty/_local/testapp_conf.yaml -o -L thirdparty/_local/testapp_conf.yaml ] && rm -f thirdparty/_local/testapp_conf.yaml
 [ -e "$appdir/testapp_conf.yaml" ] || fatal "can't find dnb yaml config file for application: $app. Tried to access file: $appdir/testapp_conf.yaml."
-[ -e "$appdir/build.inc" ] || fatal "can't find build script for application: $app. Tried to access file: $appdir/build.inc."
-ln -s ../../$appdir/build.inc thirdparty/_local/testapp_build.inc
+[ -e "$appdir/testapp_build.sh" ] || fatal "can't find build script for application: $app. Tried to access file: $appdir/testapp_build.sh."
+ln -s ../../$appdir/testapp_build.sh thirdparty/_local/testapp_build.sh
 ln -s ../../$appdir/testapp_conf.yaml thirdparty/_local/testapp_conf.yaml
-echo "Build script to use: $appdir/build.inc + $appdir/testapp_conf.yaml"
+echo "Build script to use: $appdir/testapp_build.sh + $appdir/testapp_conf.yaml"
 
 echo "------"
 echo "> Testsuite bootstrap finished, now use testall.sh or testall_*.sh scripts for test action."
