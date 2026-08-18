@@ -37,7 +37,7 @@ function do_build_and_test() {
     echo ">> ..."
     local t1=$(date +%s)
     if [ -e application.conf/$suite/build-psubmit.opt ]; then
-	echo ">> note: using psubmit to build  on a compute node"    
+	echo ">> note: using psubmit to build on a compute node"    
         psubmit.sh -n1 -o application.conf/$suite/build-psubmit.opt -a "$TESTSUITE_PROJECT $suite" > build_$suite.log 2>&1
         local true_log=$(grep '^Rank 0 output:' build_$suite.log | awk '{print $4}')
         [ -z "$true_log" ] || cat "$true_log" > build_$suite.log
@@ -49,6 +49,8 @@ function do_build_and_test() {
     echo ">> done in $(expr $t2 - $t1) sec."
     rm -rf sandbox_$suite
     cp -r thirdparty/sandbox sandbox_$suite
+
+    #--- step into the specific sandbox
     cd sandbox_$suite
     [ -f revision ] && echo "REVISION: $(cat revision)"
     rm psubmit.bin
@@ -62,8 +64,9 @@ function do_build_and_test() {
     if [ -e ../application.conf/$suite/vbbs-psubmit.opt -a -z "$MASSIVE_TESTS_OMIT_EXECUTION" ]; then
 	[ -x "$(command -v vbbs 2>/dev/null)" ] || { echo "FATAL: can't find vbbs executable"; report "test_routine_failed" || { cd ..; return 1; }; }
 	[ -x "$(command -v vbbs_sleep.sh 2>/dev/null)" ] || { echo "FATAL: can't find vbbs_sleep.sh executable"; report "test_routine_failed" || { cd ..; return 1; }; }
-        psubmit.sh -e vbbs_sleep.sh -o ../application.conf/$suite/vbbs-psubmit.opt > vbbs_$suite.log 2>&1 &
+        psubmit.sh -e vbbs_sleep.sh -o ../application.conf/$suite/vbbs-psubmit.opt > ../vbbs_$suite.log 2>&1 &
         while [ "$VBBSID" == 0 -o "$VBBSID" == "" ]; do
+	    sleep 1	
             VBBSID=$(vbbs slurm_show_id | grep SLURM_JOBID: | awk '{print $2}')
         done
 	echo ">> note: using vbbs, pre-allocated slurm job: $VBBSID"    
@@ -72,6 +75,8 @@ function do_build_and_test() {
     [ -z "$VBBSID" ] || { kill -s 2 %1; vbbs init; }
     local t4=$(date +%s)
     cd ..
+    #--- step out of the specific sandbox
+
     echo ">> done in $(expr $t4 - $t3) sec."
     report "$(expr $t2 - $t1) sec / $(expr $t4 - $t3) sec"  
     return 0
