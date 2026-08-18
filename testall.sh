@@ -64,6 +64,7 @@ function do_build_and_test() {
     if [ -e ../application.conf/$suite/vbbs-psubmit.opt -a -z "$MASSIVE_TESTS_OMIT_EXECUTION" ]; then
 	[ -x "$(command -v vbbs 2>/dev/null)" ] || { echo "FATAL: can't find vbbs executable"; report "test_routine_failed" || { cd ..; return 1; }; }
 	[ -x "$(command -v vbbs_sleep.sh 2>/dev/null)" ] || { echo "FATAL: can't find vbbs_sleep.sh executable"; report "test_routine_failed" || { cd ..; return 1; }; }
+	vbbs init
         psubmit.sh -e vbbs_sleep.sh -o ../application.conf/$suite/vbbs-psubmit.opt > ../vbbs_$suite.log 2>&1 &
         while [ "$VBBSID" == 0 -o "$VBBSID" == "" ]; do
 	    sleep 1	
