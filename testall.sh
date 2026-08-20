@@ -3,6 +3,7 @@
 [ -e testapp_defaults.inc ] && source testapp_defaults.inc
 
 source thirdparty/dbscripts/base.inc
+source thirdparty/dbscripts/func.inc
 
 RESULT=""
 
@@ -36,7 +37,9 @@ function do_build_and_test() {
     echo RUN: ./build.sh "$TESTSUITE_PROJECT" "$suite" 
     echo ">> ..."
     local t1=$(date +%s)
-    if [ -e application.conf/$suite/build-psubmit.opt ]; then
+    local avoid_psubmit_build=""
+    is_set_to_true TESTSUITE_LOCAL_BUILD && avoid_psubmit_build="true"
+    if [ -e application.conf/$suite/build-psubmit.opt -a -z "$avoid_psubmit_build" ]; then
 	echo ">> note: using psubmit to build on a compute node"    
         psubmit.sh -n1 -o application.conf/$suite/build-psubmit.opt -a "$TESTSUITE_PROJECT $suite" > build_$suite.log 2>&1
         local true_log=$(grep '^Rank 0 output:' build_$suite.log | awk '{print $4}')
