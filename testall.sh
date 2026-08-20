@@ -3,7 +3,7 @@
 [ -e testapp_defaults.inc ] && source testapp_defaults.inc
 
 source thirdparty/dbscripts/base.inc
-source thirdparty/dbscripts/func.inc
+source thirdparty/dbscripts/funcs.inc
 
 RESULT=""
 
