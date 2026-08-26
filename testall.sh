@@ -110,11 +110,13 @@ timestamp="$TESTSUITE_TIMESTAMP"
 export TESTSUITE_TIMESTAMP="$timestamp"
 echo "TIMESTAMP: $timestamp"
 stop_operation=""
+exit_code=0
 
 for suite in ${TESTSUITE_SUITES}; do
     echo "SUITE_START: $suite"
     do_build_and_test $suite
     if [ "$?" == 1 ]; then
+        exit_code=1
         case $RESULT in
             build_failed) 
                 mv build_$suite.log log_$suite.log
@@ -184,4 +186,4 @@ for suite in ${TESTSUITE_SUITES}; do
     fi
 done    
 
-
+exit $exit_code
