@@ -5,7 +5,7 @@ function check_if_exists() {
     local result=1
     for mask in $*; do
         local N=$(ls -1 $mask 2>/dev/null | wc -l)
-	    [ "$N" != 0 ] && result=0
+        [ "$N" != 0 ] && result=0
     done
     return $result
 }
@@ -25,9 +25,9 @@ if [ "$CONF_URL" == "clean" ]; then
       N=$(ls -1 confs-*.src 2>/dev/null | wc -l)
       if [ "$N" == 1 ]; then
           cd confs-*.src
-	  uncommitted_changes=$(git diff --quiet && git diff --cached --quiet && echo clean || echo dirty)
-	  cd ..
-	  [ "$uncommitted_changes" == "dirty" ] && fatal "the directory $(ls -1d confs-*.src) contains uncommitted changes, clean it manually."
+      uncommitted_changes=$(git diff --quiet && git diff --cached --quiet && echo clean || echo dirty)
+      cd ..
+      [ "$uncommitted_changes" == "dirty" ] && fatal "the directory $(ls -1d confs-*.src) contains uncommitted changes, clean it manually."
       fi
     fi
     rm -rf confs-*.src

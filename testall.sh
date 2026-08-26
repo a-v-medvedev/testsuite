@@ -40,7 +40,7 @@ function do_build_and_test() {
     local avoid_psubmit_build=""
     is_set_to_true TESTSUITE_LOCAL_BUILD && avoid_psubmit_build="true"
     if [ -e application.conf/$suite/build-psubmit.opt -a -z "$avoid_psubmit_build" ]; then
-	echo ">> note: using psubmit to build on a compute node"    
+    echo ">> note: using psubmit to build on a compute node"    
         psubmit.sh -n1 -o application.conf/$suite/build-psubmit.opt -a "$TESTSUITE_PROJECT $suite" > build_$suite.log 2>&1
         local true_log=$(grep '^Rank 0 output:' build_$suite.log | awk '{print $4}')
         [ -z "$true_log" ] || cat "$true_log" > build_$suite.log
@@ -65,18 +65,18 @@ function do_build_and_test() {
     local t3=$(date +%s)
     local VBBSID=""
     if [ -e ../application.conf/$suite/vbbs-psubmit.opt -a ! -v MASSIVE_TESTS_OMIT_EXECUTION ]; then
-	[ -x "$(command -v vbbs 2>/dev/null)" ] || { echo "FATAL: can't find vbbs executable"; report "test_routine_failed" || { cd ..; return 1; }; }
-	[ -x "$(command -v vbbs_sleep.sh 2>/dev/null)" ] || { echo "FATAL: can't find vbbs_sleep.sh executable"; report "test_routine_failed" || { cd ..; return 1; }; }
-	vbbs init
-        psubmit.sh -e vbbs_sleep.sh -o ../application.conf/$suite/vbbs-psubmit.opt > ../vbbs_$suite.log 2>&1 &
-        while [ "$VBBSID" == 0 -o "$VBBSID" == "" ]; do
-	    sleep 1	
-            VBBSID=$(vbbs slurm_show_id | grep SLURM_JOBID: | awk '{print $2}')
-        done
-	echo ">> note: using vbbs, pre-allocated slurm job: $VBBSID"    
+    [ -x "$(command -v vbbs 2>/dev/null)" ] || { echo "FATAL: can't find vbbs executable"; report "test_routine_failed" || { cd ..; return 1; }; }
+    [ -x "$(command -v vbbs_sleep.sh 2>/dev/null)" ] || { echo "FATAL: can't find vbbs_sleep.sh executable"; report "test_routine_failed" || { cd ..; return 1; }; }
+    vbbs init
+    psubmit.sh -e vbbs_sleep.sh -o ../application.conf/$suite/vbbs-psubmit.opt > ../vbbs_$suite.log 2>&1 &
+    while [ "$VBBSID" == 0 -o "$VBBSID" == "" ]; do
+       sleep 1    
+       VBBSID=$(vbbs slurm_show_id | grep SLURM_JOBID: | awk '{print $2}')
+    done
+    echo ">> note: using vbbs, pre-allocated slurm job: $VBBSID"    
     fi
     ./functional_massive_tests.sh > ../test_routine_$suite.log 2>&1 || report "test_routine_failed" || { cd ..; return 1; }
-    [ -z "$VBBSID" ] || { kill -s 2 %1; vbbs init; }
+    [ -z "$VBBSID" ] || { set -x; kill -s 2 %1; sleep 5; scancel "$VBBSID"; sleep 5; vbbs init; set +x; }
     local t4=$(date +%s)
     cd ..
     #--- step out of the specific sandbox
