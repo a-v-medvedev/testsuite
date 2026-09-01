@@ -69,14 +69,16 @@ function do_build_and_test() {
     [ -x "$(command -v vbbs_sleep.sh 2>/dev/null)" ] || { echo "FATAL: can't find vbbs_sleep.sh executable"; report "test_routine_failed" || { cd ..; return 1; }; }
     vbbs init
     psubmit.sh -e vbbs_sleep.sh -o ../application.conf/$suite/vbbs-psubmit.opt > ../vbbs_$suite.log 2>&1 &
+    pid=$!
     while [ "$VBBSID" == 0 -o "$VBBSID" == "" ]; do
-       sleep 1    
+       sleep 1
        VBBSID=$(vbbs slurm_show_id | grep SLURM_JOBID: | awk '{print $2}')
+       jobs -r -p | grep -qx "$pid" || { echo ">> error: psubmit for vbbs failed"; cat ../vbbs_$suite.log; cd ..; return 1; }
     done
     echo ">> note: using vbbs, pre-allocated slurm job: $VBBSID"    
     fi
     ./functional_massive_tests.sh > ../test_routine_$suite.log 2>&1 || report "test_routine_failed" || { cd ..; return 1; }
-    [ -z "$VBBSID" ] || { set -x; kill -s 2 %1; sleep 5; scancel "$VBBSID"; sleep 5; vbbs init; set +x; }
+    [ -z "$VBBSID" ] || { set -x; kill -s 2 $pid; sleep 5; scancel "$VBBSID"; sleep 5; vbbs init; set +x; }
     local t4=$(date +%s)
     cd ..
     #--- step out of the specific sandbox
